@@ -1,0 +1,7 @@
+allowBuilds:
+  '@tailwindcss/oxide': false
+  sharp: false
+  unrs-resolver: false
+minimumReleaseAgeExclude:
+  - '@heroui/react@3.2.5'
+  - '@heroui/styles@3.2.5'
