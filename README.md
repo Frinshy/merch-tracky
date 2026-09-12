@@ -40,3 +40,4 @@ npm run dev
 ## License
 
 Licensed under the [MIT license](https://github.com/heroui-inc/next-app-template/blob/main/LICENSE).
+ 
