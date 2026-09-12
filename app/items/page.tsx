@@ -17,8 +17,8 @@ export default function Items() {
         <Search />
         <SortSelector />
       </div>
-      <div className="mt-4 grid w-full grid-cols-1 gap-4 lg:grid-cols-[minmax(15rem,15rem)_minmax(0,1fr)]">
-        <div className="flex h-fit min-w-0 w-full self-start flex-col gap-5 rounded bg-surface p-4 sm:p-5 lg:sticky lg:top-49  lg:z-10 lg:min-w-60">
+      <div className="mt-4 grid w-full grid-cols-1 gap-4 lg:grid-cols-[minmax(17.5rem,17.5rem)_minmax(0,1fr)]">
+        <div className="flex h-fit min-w-0 w-full self-start flex-col gap-5 rounded bg-surface p-4 sm:p-5 lg:sticky lg:top-49 lg:min-w-70">
           <TypeSelector />
           <EraSelector />
           <Button className="self-end" type="submit">
