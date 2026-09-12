@@ -47,6 +47,7 @@
   --radius: 0.5rem;
   --field-radius: 0.75rem;
   --font-sans: var(--font-inter);
+  --logo-filter: brightness(0);
 }
 
 .dark,
@@ -81,6 +82,7 @@
   --surface-secondary-foreground: oklch(99.11% 0 0);
   --surface-tertiary: oklch(27.21% 0 64.28);
   --surface-tertiary-foreground: oklch(99.11% 0 0);
+  --logo-filter: brightness(0) invert(1);
   --warning: oklch(82.03% 0.1388 53.59);
   --warning-foreground: oklch(21.03% 0.0059 53.59);
 }

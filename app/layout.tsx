@@ -6,7 +6,7 @@ import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-import { AppShell } from "@/components/app-shell";
+import { Navbar } from "@/components/navbar";
 
 export const metadata: Metadata = {
   title: {
@@ -41,7 +41,23 @@ export default function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <AppShell>{children}</AppShell>
+          <div className="relative flex min-h-screen flex-col">
+            <Navbar />
+            <main className="container mx-auto flex-grow max-w-7xl px-6 pt-20">
+              {children}
+            </main>
+            {/* <footer className="flex w-full items-center justify-center py-3">
+              <a
+                className="flex items-center gap-1 text-current no-underline"
+                href="https://heroui.com?utm_source=next-app-template"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <span className="text-muted">Powered by</span>
+                <p className="text-accent">HeroUI</p>
+              </a>
+            </footer> */}
+          </div>
         </Providers>
       </body>
     </html>
