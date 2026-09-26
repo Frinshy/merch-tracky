@@ -1,0 +1,33 @@
+{
+  "MerchItems": [
+    {
+      "id": "test",
+      "name": "Test Item",
+      "description": "This is a test item for demonstration purposes.",
+      "type": "CD",
+      "era": "HDWG",
+      "images": [
+        {
+          "src": "/items/test.jpeg",
+          "alt": "Test Item Image",
+          "author": "Jeff"
+        },
+        {
+          "src": "/items/test.jpeg",
+          "alt": "Test Item Image",
+          "author": "Jeff"
+        },
+        {
+          "src": "/items/test.jpeg",
+          "alt": "Test Item Image",
+          "author": "Jeff"
+        },
+        {
+          "src": "/items/test.jpeg",
+          "alt": "Test Item Image",
+          "author": "Jeff"
+        }
+      ]
+    }
+  ]
+}
