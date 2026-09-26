@@ -28,6 +28,48 @@
           "author": "Jeff"
         }
       ]
+    },
+    {
+      "id": "after-hours-cd",
+      "name": "After Hours CD",
+      "description": "A studio release from the artist's after-hours era.",
+      "type": "CD",
+      "era": "After Hours",
+      "images": [
+        {
+          "src": "/items/test.jpeg",
+          "alt": "After Hours CD",
+          "author": "Jeff"
+        }
+      ]
+    },
+    {
+      "id": "live-tour-shirt",
+      "name": "Live Tour Shirt",
+      "description": "Official tour merch from the live release cycle.",
+      "type": "Apparel",
+      "era": "Live Tour",
+      "images": [
+        {
+          "src": "/items/test.jpeg",
+          "alt": "Live Tour Shirt",
+          "author": "Jeff"
+        }
+      ]
+    },
+    {
+      "id": "limited-edition-vinyl",
+      "name": "Limited Edition Vinyl",
+      "description": "A limited pressing from the latest release era.",
+      "type": "Vinyl",
+      "era": "Latest",
+      "images": [
+        {
+          "src": "/items/test.jpeg",
+          "alt": "Limited Edition Vinyl",
+          "author": "Jeff"
+        }
+      ]
     }
   ]
 }
