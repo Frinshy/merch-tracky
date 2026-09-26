@@ -36,9 +36,9 @@ export default async function Item({
         <ItemGallery item={item} />
         <div className="flex min-w-0 flex-col gap-5">
           <div className="flex flex-col gap-3 border-b border-separator pb-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">
+            {/* <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">
               Item details
-            </p>
+            </p> */}
             <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
               {item.name}
             </h1>
