@@ -1,42 +1,39 @@
-# Next.js & HeroUI Template
+# Merch Tracky
 
-This is a template for creating applications using Next.js 16 (app directory) and HeroUI (v3).
+Merch Tracky is a public archive for browsing an artist's merchandise by release, format, and era. The app provides a home dashboard, a catalog view, and detail pages with image galleries for individual items.
 
-[Try it on CodeSandbox](https://githubbox.com/heroui-inc/heroui/next-app-template)
+## Features
 
-## Technologies Used
+- Browse recently added merchandise from the home page.
+- Search and sort the catalog.
+- Narrow the catalog by item type and era.
+- Open a dedicated detail page for each item.
+- View multiple images in an item gallery when they are available.
+- Switch between light and dark themes.
 
-- [Next.js 16](https://nextjs.org/docs/getting-started)
-- [HeroUI v3](https://heroui.com/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
+## Managing merchandise data
 
-## How to Use
+The catalog is stored in [`data/merch-items.json`](data/merch-items.json). Add or update an entry in the `MerchItems` array using this shape:
 
-### Use the template with create-next-app
-
-To create a new project based on this template using `create-next-app`, run the following command:
-
-```bash
-npx create-next-app -e https://github.com/heroui-inc/next-app-template
+```json
+{
+  "id": "unique-item-id",
+  "name": "Item name",
+  "description": "Short description",
+  "type": "CD",
+  "era": "Release era",
+  "images": [
+    {
+      "src": "/items/item-image.jpeg",
+      "alt": "Accessible image description",
+      "author": "Contributor name"
+    }
+  ]
+}
 ```
 
-### Install dependencies
-
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
-
-```bash
-npm install
-```
-
-### Run the development server
-
-```bash
-npm run dev
-```
+Place referenced image files in `public/items/`. The `id` is used to build the detail route at `/items/<id>`.
 
 ## License
 
-Licensed under the [MIT license](https://github.com/heroui-inc/next-app-template/blob/main/LICENSE).
+This project is licensed under the [MIT License](LICENSE).
