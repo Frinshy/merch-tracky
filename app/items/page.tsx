@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import {
   Button,
   Card,
@@ -12,29 +15,63 @@ import Link from "next/link";
 import MerchItems from "@/data/merch-items.json";
 
 export default function Items() {
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedEra, setSelectedEra] = useState("");
+  const [selectedSort, setSelectedSort] = useState("");
+  const [appliedFilters, setAppliedFilters] = useState({
+    type: "",
+    era: "",
+    sort: "",
+  });
+
+  const filteredItems = MerchItems.MerchItems.filter(
+    (item) =>
+      (!appliedFilters.type || item.type === appliedFilters.type) &&
+      (!appliedFilters.era || item.era === appliedFilters.era),
+  ).sort((firstItem, secondItem) => {
+    if (appliedFilters.sort === "name-desc") {
+      return secondItem.name.localeCompare(firstItem.name);
+    }
+
+    if (appliedFilters.sort === "name-asc") {
+      return firstItem.name.localeCompare(secondItem.name);
+    }
+
+    return 0;
+  });
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setAppliedFilters({
+      type: selectedType,
+      era: selectedEra,
+      sort: selectedSort,
+    });
+  }
+
   return (
-    <div className="min-h-screen w-full">
+    <form className="min-h-screen w-full" onSubmit={handleSubmit}>
       <div className="lg:sticky lg:top-20 lg:z-20 flex w-full shrink-0 flex-col items-stretch gap-3 rounded bg-surface p-4 sm:top-16 sm:flex-row sm:items-end sm:gap-4 sm:p-5">
         <Search />
-        <SortSelector />
+        <SortSelector value={selectedSort} onChange={setSelectedSort} />
       </div>
       <div className="mt-4 grid w-full grid-cols-1 gap-4 lg:grid-cols-[minmax(17.5rem,17.5rem)_minmax(0,1fr)]">
         <div className="flex h-fit min-w-0 w-full self-start flex-col gap-5 rounded bg-surface p-4 sm:p-5 lg:sticky lg:top-49 lg:min-w-70">
-          <TypeSelector />
-          <EraSelector />
+          <TypeSelector value={selectedType} onChange={setSelectedType} />
+          <EraSelector value={selectedEra} onChange={setSelectedEra} />
           <Button className="self-end" type="submit">
             Submit
           </Button>
         </div>
         <div className="min-w-0 rounded bg-surface p-4 sm:p-5">
           <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {MerchItems.MerchItems.map((merchItem, index) => (
-              <ItemCard item={merchItem} key={index} />
+            {filteredItems.map((merchItem) => (
+              <ItemCard item={merchItem} key={merchItem.id} />
             ))}
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 }
 
@@ -75,128 +112,169 @@ export function ItemCard({
   );
 }
 
-export function TypeSelector() {
+const itemTypes = Array.from(
+  new Set(MerchItems.MerchItems.map((item) => item.type)),
+);
+const itemEras = Array.from(
+  new Set(MerchItems.MerchItems.map((item) => item.era)),
+);
+
+type SelectorProps = {
+  value: string;
+  onChange: (value: string) => void;
+};
+
+function SelectorClearButton({
+  label,
+  onClear,
+  value,
+}: {
+  label: string;
+  onClear: () => void;
+  value: string;
+}) {
+  if (!value) {
+    return null;
+  }
+
   return (
-    <ComboBox className="w-full" variant="secondary">
+    <Button
+      aria-label={`Remove ${label}`}
+      className="absolute end-8 top-1/2 z-10 h-8 w-8 -translate-y-1/2 text-muted hover:text-foreground"
+      isIconOnly
+      onPress={onClear}
+      size="sm"
+      type="button"
+      variant="ghost"
+    >
+      <span aria-hidden="true">&times;</span>
+    </Button>
+  );
+}
+
+export function TypeSelector({ value, onChange }: SelectorProps) {
+  return (
+    <ComboBox
+      className="w-full"
+      onSelectionChange={(key) => onChange(key ? String(key) : "")}
+      selectedKey={value || null}
+      variant="secondary"
+    >
       <Label>Type of item</Label>
       <ComboBox.InputGroup>
         <Input
           className="border border-default bg-content1"
           placeholder="Select type..."
         />
+        <SelectorClearButton
+          label="type filter"
+          onClear={() => onChange("")}
+          value={value}
+        />
         <ComboBox.Trigger />
       </ComboBox.InputGroup>
       <ComboBox.Popover>
         <ListBox>
-          <ListBox.Item id="aardvark" textValue="Aardvark">
-            Aardvark
+          <ListBox.Item
+            id="all-types"
+            onAction={() => onChange("")}
+            textValue="All types"
+          >
+            All types
             <ListBox.ItemIndicator />
           </ListBox.Item>
-          <ListBox.Item id="cat" textValue="Cat">
-            Cat
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
-          <ListBox.Item id="dog" textValue="Dog">
-            Dog
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
-          <ListBox.Item id="kangaroo" textValue="Kangaroo">
-            Kangaroo
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
-          <ListBox.Item id="panda" textValue="Panda">
-            Panda
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
-          <ListBox.Item id="snake" textValue="Snake">
-            Snake
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
+          {itemTypes.map((type) => (
+            <ListBox.Item key={type} id={type} textValue={type}>
+              {type}
+              <ListBox.ItemIndicator />
+            </ListBox.Item>
+          ))}
         </ListBox>
       </ComboBox.Popover>
     </ComboBox>
   );
 }
 
-export function EraSelector() {
+export function EraSelector({ value, onChange }: SelectorProps) {
   return (
-    <ComboBox className="w-full" variant="secondary">
+    <ComboBox
+      className="w-full"
+      onSelectionChange={(key) => onChange(key ? String(key) : "")}
+      selectedKey={value || null}
+      variant="secondary"
+    >
       <Label>Era of item</Label>
       <ComboBox.InputGroup>
         <Input
           className="border border-default bg-content1"
           placeholder="Select era..."
         />
+        <SelectorClearButton
+          label="era filter"
+          onClear={() => onChange("")}
+          value={value}
+        />
         <ComboBox.Trigger />
       </ComboBox.InputGroup>
       <ComboBox.Popover>
         <ListBox>
-          <ListBox.Item id="aardvark" textValue="Aardvark">
-            Aardvark
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
-          <ListBox.Item id="cat" textValue="Cat">
-            Cat
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
-          <ListBox.Item id="dog" textValue="Dog">
-            Dog
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
-          <ListBox.Item id="kangaroo" textValue="Kangaroo">
-            Kangaroo
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
-          <ListBox.Item id="panda" textValue="Panda">
-            Panda
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
-          <ListBox.Item id="snake" textValue="Snake">
-            Snake
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
+          {itemEras.map((era) => (
+            <ListBox.Item key={era} id={era} textValue={era}>
+              {era}
+              <ListBox.ItemIndicator />
+            </ListBox.Item>
+          ))}
         </ListBox>
       </ComboBox.Popover>
     </ComboBox>
   );
 }
 
-export function SortSelector() {
+const sortOptions = [
+  { id: "name-asc", label: "Name (A-Z)" },
+  { id: "name-desc", label: "Name (Z-A)" },
+];
+
+export function SortSelector({ value, onChange }: SelectorProps) {
   return (
-    <ComboBox className="w-full max-w-40" variant="secondary">
+    <ComboBox
+      className="w-full max-w-40"
+      onSelectionChange={(key) => onChange(key ? String(key) : "")}
+      selectedKey={value || null}
+      variant="secondary"
+    >
       <ComboBox.InputGroup>
         <Input
           className="border border-default bg-content1"
           placeholder="Sort..."
         />
+        <SelectorClearButton
+          label="sort"
+          onClear={() => onChange("")}
+          value={value}
+        />
         <ComboBox.Trigger />
       </ComboBox.InputGroup>
       <ComboBox.Popover>
         <ListBox>
-          <ListBox.Item id="aardvark" textValue="Aardvark">
-            Aardvark
+          <ListBox.Item
+            id="default-sort"
+            onAction={() => onChange("")}
+            textValue="No sorting"
+          >
+            No sorting
             <ListBox.ItemIndicator />
           </ListBox.Item>
-          <ListBox.Item id="cat" textValue="Cat">
-            Cat
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
-          <ListBox.Item id="dog" textValue="Dog">
-            Dog
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
-          <ListBox.Item id="kangaroo" textValue="Kangaroo">
-            Kangaroo
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
-          <ListBox.Item id="panda" textValue="Panda">
-            Panda
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
-          <ListBox.Item id="snake" textValue="Snake">
-            Snake
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
+          {sortOptions.map((option) => (
+            <ListBox.Item
+              key={option.id}
+              id={option.id}
+              textValue={option.label}
+            >
+              {option.label}
+              <ListBox.ItemIndicator />
+            </ListBox.Item>
+          ))}
         </ListBox>
       </ComboBox.Popover>
     </ComboBox>
