@@ -1,6 +1,6 @@
 # Merch Tracky
 
-Merch Tracky is a public archive for browsing an artist's merchandise by release, format, and era. The app provides a home dashboard, a c atalog view, and detail pages with image galleries for individual items.
+Merch Tracky is a public archive for browsing an artist's merchandise by release, format, and era. The app provides a home dashboard, a catalog view, and detail pages with image galleries for individual items.
 
 ## Features
 
