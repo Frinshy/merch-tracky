@@ -1,43 +1,27 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useQueryStates } from "nuqs";
+import { useCallback } from "react";
 
-import {
-  DEFAULT_FILTERS,
-  parseFilters,
-  serializeFilters,
-  type CatalogFilters,
-} from "@/lib/catalog/filters";
+import { catalogFilterParsers, catalogFilterUrlKeys } from "@/lib/catalog/filters";
 
 /**
- * Catalog filter state, initialised from and mirrored to the URL so
- * filtered views can be shared and survive reloads.
+ * Catalog filter state, stored in the URL so filtered views can be shared,
+ * survive reloads, and reset when a plain `/items` link is followed.
  *
- * `history.replaceState` (rather than router.replace) keeps typing in the
- * search box instant; Next.js still picks the change up in useSearchParams.
+ * nuqs updates React state immediately (keeps typing in the search box
+ * snappy) and writes the URL shallowly in the background.
  */
 export function useCatalogFilters() {
-  const searchParams = useSearchParams();
-  const [filters, setFilters] = useState<CatalogFilters>(() =>
-    parseFilters(new URLSearchParams(searchParams.toString())),
-  );
-
-  useEffect(() => {
-    const query = serializeFilters(filters);
-
-    window.history.replaceState(null, "", query ? `?${query}` : window.location.pathname);
-  }, [filters]);
-
-  const update = useCallback(
-    (patch: Partial<CatalogFilters>) => setFilters((prev) => ({ ...prev, ...patch })),
-    [],
-  );
+  const [filters, update] = useQueryStates(catalogFilterParsers, {
+    urlKeys: catalogFilterUrlKeys,
+  });
 
   const clear = useCallback(
-    () => setFilters((prev) => ({ ...DEFAULT_FILTERS, sort: prev.sort, view: prev.view })),
-    [],
+    () => update({ query: null, types: null, eras: null, sources: null }),
+    [update],
   );
 
-  return { filters, update, clear, autoFocus: searchParams.get("focus") === "1" };
+  return { filters, update, clear, autoFocus: useSearchParams().get("focus") === "1" };
 }

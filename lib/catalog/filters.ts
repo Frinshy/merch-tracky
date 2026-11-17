@@ -2,6 +2,8 @@
  * Pure catalog search/filter/sort logic and its URL representation.
  * Kept free of React so it can be unit-tested and reused anywhere.
  */
+import { parseAsArrayOf, parseAsString, parseAsStringLiteral } from "nuqs/server";
+
 import { getEra } from "./data";
 import type { MerchItem } from "./types";
 
@@ -24,47 +26,27 @@ export type CatalogFilters = {
   view: CatalogView;
 };
 
-export const DEFAULT_FILTERS: CatalogFilters = {
-  query: "",
-  types: [],
-  eras: [],
-  sources: [],
-  sort: "added",
-  view: "grid",
+const list = parseAsArrayOf(parseAsString).withDefault([]);
+
+/**
+ * URL representation of the filters, e.g. `?era=walls&type=Vinyl,CD`.
+ * Values equal to their default are left out of the URL.
+ */
+export const catalogFilterParsers = {
+  query: parseAsString.withDefault(""),
+  types: list,
+  eras: list,
+  sources: list,
+  sort: parseAsStringLiteral(Object.keys(SORT_OPTIONS) as SortKey[]).withDefault("added"),
+  view: parseAsStringLiteral(["grid", "list"] as const).withDefault("grid"),
 };
 
-const isSortKey = (value: string | null): value is SortKey =>
-  value !== null && value in SORT_OPTIONS;
-
-const splitList = (value: string | null) => (value ? value.split(",").filter(Boolean) : []);
-
-/** Reads filters from URL search params, e.g. `?era=walls&type=Vinyl,CD`. */
-export function parseFilters(params: URLSearchParams): CatalogFilters {
-  const sort = params.get("sort");
-
-  return {
-    query: params.get("q") ?? "",
-    types: splitList(params.get("type")),
-    eras: splitList(params.get("era")),
-    sources: splitList(params.get("source")),
-    sort: isSortKey(sort) ? sort : DEFAULT_FILTERS.sort,
-    view: params.get("view") === "list" ? "list" : "grid",
-  };
-}
-
-/** Inverse of `parseFilters`. Defaults are omitted to keep URLs short. */
-export function serializeFilters(filters: CatalogFilters): string {
-  const params = new URLSearchParams();
-
-  if (filters.query) params.set("q", filters.query);
-  if (filters.types.length) params.set("type", filters.types.join(","));
-  if (filters.eras.length) params.set("era", filters.eras.join(","));
-  if (filters.sources.length) params.set("source", filters.sources.join(","));
-  if (filters.sort !== DEFAULT_FILTERS.sort) params.set("sort", filters.sort);
-  if (filters.view !== DEFAULT_FILTERS.view) params.set("view", filters.view);
-
-  return params.toString();
-}
+export const catalogFilterUrlKeys = {
+  query: "q",
+  types: "type",
+  eras: "era",
+  sources: "source",
+} as const;
 
 export function hasActiveFilters(filters: CatalogFilters) {
   return Boolean(
