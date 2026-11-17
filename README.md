@@ -23,7 +23,46 @@ Only the repository owner can add content. The public site is read-only, and con
 2. Add, edit or delete items and eras. Photos are resized to max 2000px, converted to WebP and saved to `public/items/`.
 3. Commit `data/` and `public/items/`, then push. The deployment rebuilds with the new content.
 
-The `/dev` pages and `/api/dev/*` routes only work under `next dev`. In production they return 404/403.
+The `/dev` pages and `/api/dev/*` routes only work under `next dev`. In production they return 404.
+
+## Development
+
+```bash
+pnpm dev         # start the dev server (includes the /dev admin)
+pnpm check       # type-check + lint
+pnpm lint:fix    # auto-fix lint and formatting (Prettier runs through ESLint)
+pnpm build       # production build
+```
+
+Built with Next.js 16 (App Router), [HeroUI v3](https://heroui.com) and Tailwind CSS v4.
+The HeroUI MCP server is configured in `opencode.json` for AI-assisted work on the UI.
+
+### Project structure
+
+```
+app/                    Routes only: pages, layouts, metadata, sitemap/robots
+  api/dev/              Admin API (thin handlers around lib/admin)
+  dev/                  Admin pages (development only)
+components/
+  layout/               Navbar, footer, theme switch, dev toolbar
+  ui/                   Small shared building blocks (ButtonLink, SectionHeading, icons…)
+  items/ eras/          Domain components for the public site
+  catalog/              Catalog page: toolbar + URL-synced filter hook
+  admin/                Admin forms, table and dialogs
+lib/
+  catalog/              Types, read-only data access, formatting, pure filter/sort logic
+  admin/                Server-side admin: guard, file store, image processing,
+                        validation, services; plus a typed browser API client
+config/                 Site config and fonts
+data/                   The archive itself (JSON)
+```
+
+Conventions:
+
+- Server Components by default. `"use client"` only where there is interaction.
+- UI uses HeroUI components. Next.js links styled as buttons use `ButtonLink` (`buttonVariants`).
+- Business logic lives in `lib/`, not in components or route handlers.
+- Anything that writes to disk imports `server-only` and is guarded by `isAdminEnabled()`.
 
 ### Data files
 

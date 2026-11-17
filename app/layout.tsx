@@ -1,30 +1,25 @@
 import "@/styles/globals.css";
-import { Metadata, Viewport } from "next";
+
 import clsx from "clsx";
+import type { Metadata, Viewport } from "next";
+
+import { DevToolbar } from "@/components/layout/dev-toolbar";
+import { Footer } from "@/components/layout/footer";
+import { Navbar } from "@/components/layout/navbar";
+import { fontDisplay, fontMono, fontSans } from "@/config/fonts";
+import { siteConfig } from "@/config/site";
 
 import { Providers } from "./providers";
 
-import { siteConfig } from "@/config/site";
-import { fontDisplay, fontMono, fontSans } from "@/config/fonts";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
-import { DevToolbar } from "@/components/dev-toolbar";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ??
-      (process.env.VERCEL_PROJECT_PRODUCTION_URL
-        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-        : "http://localhost:3000"),
-  ),
+  metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} — Louis Tomlinson merch archive`,
+    default: `${siteConfig.name} — ${siteConfig.tagline}`,
     template: `%s · ${siteConfig.name}`,
   },
   description: siteConfig.description,
-  icons: {
-    icon: "/favicon.ico",
-  },
+  icons: { icon: "/favicon.ico" },
+  openGraph: { siteName: siteConfig.name, type: "website" },
 };
 
 export const viewport: Viewport = {
@@ -34,14 +29,9 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html suppressHydrationWarning lang="en">
-      <head />
       <body
         className={clsx(
           "min-h-screen bg-background font-sans text-foreground antialiased",
@@ -53,9 +43,7 @@ export default function RootLayout({
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex min-h-screen flex-col">
             <Navbar />
-            <main className="mx-auto w-full max-w-7xl flex-grow px-4 pt-16 sm:px-6">
-              {children}
-            </main>
+            <main className="mx-auto w-full max-w-7xl grow px-4 pt-16 sm:px-6">{children}</main>
             <Footer />
             <DevToolbar />
           </div>

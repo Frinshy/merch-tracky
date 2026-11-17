@@ -1,14 +1,15 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { isDev } from "@/lib/dev-store";
+import { isAdminEnabled } from "@/lib/admin/guard";
 
-// Admin pages read the JSON files from disk on every request.
+// Admin pages read the data files from disk on every request.
 export const dynamic = "force-dynamic";
 
-export const metadata = { title: "Admin", robots: { index: false } };
+export const metadata: Metadata = { title: "Admin", robots: { index: false } };
 
-export default function DevLayout({ children }: { children: React.ReactNode }) {
-  if (!isDev()) notFound();
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  if (!isAdminEnabled()) notFound();
 
   return <div className="pt-8">{children}</div>;
 }

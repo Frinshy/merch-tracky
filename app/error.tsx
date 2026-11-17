@@ -1,13 +1,15 @@
 "use client";
 
+import { Button } from "@heroui/react";
 import { useEffect } from "react";
-import Link from "next/link";
 
-export default function Error({
+import { ButtonLink } from "@/components/ui/button-link";
+
+export default function ErrorPage({
   error,
   reset,
 }: {
-  error: Error;
+  error: Error & { digest?: string };
   reset: () => void;
 }) {
   useEffect(() => {
@@ -20,18 +22,10 @@ export default function Error({
       <p className="label-caps text-muted">Error</p>
       <h1 className="font-display text-5xl">Something went wrong.</h1>
       <div className="flex gap-3">
-        <button
-          className="rounded-md bg-foreground px-4 py-2 text-sm text-background"
-          onClick={() => reset()}
-        >
-          Try again
-        </button>
-        <Link
-          className="rounded-md border border-separator px-4 py-2 text-sm"
-          href="/"
-        >
+        <Button onPress={reset}>Try again</Button>
+        <ButtonLink href="/" variant="secondary">
           Go home
-        </Link>
+        </ButtonLink>
       </div>
     </div>
   );
