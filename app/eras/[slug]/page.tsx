@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -15,9 +16,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const era = getEra((await params).slug);
 
-  return era
-    ? { title: `${era.name} era`, description: era.description }
-    : {};
+  return era ? { title: `${era.name} era`, description: era.description } : {};
 }
 
 export default async function EraPage({ params }: Props) {
@@ -37,28 +36,42 @@ export default async function EraPage({ params }: Props) {
   return (
     <div className="flex flex-col gap-14 pt-8">
       <header
-        className="relative -mx-4 overflow-hidden px-4 pb-10 pt-12 sm:-mx-6 sm:rounded-lg sm:px-10"
+        className="relative -mx-4 grid items-end gap-8 overflow-hidden px-4 pb-10 pt-12 sm:-mx-6 sm:rounded-lg sm:px-10 md:grid-cols-[minmax(0,1fr)_auto]"
         style={{
           background: `linear-gradient(135deg, ${era.color}, color-mix(in oklab, ${era.color} 55%, black))`,
         }}
       >
-        <nav aria-label="Breadcrumb" className="label-caps text-black/60">
-          <Link className="hover:text-black" href="/eras">
-            Eras
-          </Link>{" "}
-          / {era.year}
-        </nav>
-        <h1 className="mt-6 font-display text-6xl leading-none text-black sm:text-8xl">
-          {era.name}
-        </h1>
-        {era.description && (
-          <p className="mt-4 max-w-xl text-black/75">{era.description}</p>
+        <div>
+          <nav aria-label="Breadcrumb" className="label-caps text-black/60">
+            <Link className="hover:text-black" href="/eras">
+              Eras
+            </Link>{" "}
+            / {era.year}
+          </nav>
+          <h1 className="mt-6 font-display text-6xl leading-none text-black sm:text-8xl">
+            {era.name}
+          </h1>
+          {era.description && (
+            <p className="mt-4 max-w-xl text-black/75">{era.description}</p>
+          )}
+          <dl className="mt-8 flex gap-8 text-black">
+            <Stat label="Items" value={eraItems.length} />
+            <Stat label="Formats" value={types.length} />
+            <Stat label="Year" value={era.year} />
+          </dl>
+        </div>
+        {era.cover && (
+          <div className="relative aspect-square w-full max-w-xs overflow-hidden rounded-md shadow-2xl ring-1 ring-black/20 md:w-72">
+            <Image
+              alt={`${era.name} cover`}
+              className="object-cover"
+              fill
+              priority
+              sizes="(min-width: 768px) 18rem, 100vw"
+              src={era.cover}
+            />
+          </div>
         )}
-        <dl className="mt-8 flex gap-8 text-black">
-          <Stat label="Items" value={eraItems.length} />
-          <Stat label="Formats" value={types.length} />
-          <Stat label="Year" value={era.year} />
-        </dl>
       </header>
 
       {types.length === 0 && (
@@ -88,7 +101,10 @@ export default async function EraPage({ params }: Props) {
         className="grid grid-cols-2 gap-4 border-t border-separator pt-6 text-sm"
       >
         {prev ? (
-          <Link className="group text-muted hover:text-foreground" href={`/eras/${prev.slug}`}>
+          <Link
+            className="group text-muted hover:text-foreground"
+            href={`/eras/${prev.slug}`}
+          >
             <span className="label-caps block">← Previous era</span>
             <span className="font-display text-2xl text-foreground">
               {prev.name}

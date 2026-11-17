@@ -81,12 +81,16 @@ export async function saveImage(file: File, baseName: string): Promise<string> {
   }
 }
 
-/** Deletes image files that are no longer referenced by any item. */
+/** Deletes image files that are no longer referenced by any item or era cover. */
 export async function deleteUnusedImages(
   candidates: string[],
   items: MerchItem[],
 ) {
-  const used = new Set(items.flatMap((item) => item.images.map((i) => i.src)));
+  const eras = await readEras();
+  const used = new Set([
+    ...items.flatMap((item) => item.images.map((i) => i.src)),
+    ...(eras.map((era) => era.cover).filter(Boolean) as string[]),
+  ]);
 
   for (const src of Array.from(new Set(candidates))) {
     if (used.has(src) || !src.startsWith("/items/")) continue;

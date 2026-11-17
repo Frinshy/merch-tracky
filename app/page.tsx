@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { SearchIcon } from "@/components/icons";
@@ -85,21 +86,36 @@ export default function Home() {
           }}
         >
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <div className="flex flex-col gap-2">
-              <p className="label-caps flex items-center gap-2 text-muted">
-                <span
-                  aria-hidden="true"
-                  className="size-2 rounded-full"
-                  style={{ backgroundColor: currentEra.color }}
-                />
-                Current era · {currentEra.year}
-              </p>
-              <h2 className="font-display text-5xl leading-none sm:text-6xl">
-                {currentEra.name}
-              </h2>
-              {currentEra.description && (
-                <p className="max-w-lg text-muted">{currentEra.description}</p>
+            <div className="flex items-end gap-6">
+              {currentEra.cover && (
+                <div className="relative hidden size-32 shrink-0 overflow-hidden rounded-md shadow-xl ring-1 ring-separator sm:block">
+                  <Image
+                    alt={`${currentEra.name} cover`}
+                    className="object-cover"
+                    fill
+                    sizes="8rem"
+                    src={currentEra.cover}
+                  />
+                </div>
               )}
+              <div className="flex flex-col gap-2">
+                <p className="label-caps flex items-center gap-2 text-muted">
+                  <span
+                    aria-hidden="true"
+                    className="size-2 rounded-full"
+                    style={{ backgroundColor: currentEra.color }}
+                  />
+                  Current era · {currentEra.year}
+                </p>
+                <h2 className="font-display text-5xl leading-none sm:text-6xl">
+                  {currentEra.name}
+                </h2>
+                {currentEra.description && (
+                  <p className="max-w-lg text-muted">
+                    {currentEra.description}
+                  </p>
+                )}
+              </div>
             </div>
             <Link
               className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-black transition hover:opacity-90"
@@ -130,11 +146,26 @@ export default function Home() {
                   href={`/eras/${era.slug}`}
                   meta={String(era.year)}
                 >
-                  <span
-                    aria-hidden="true"
-                    className="size-2.5 rounded-full"
-                    style={{ backgroundColor: era.color }}
-                  />
+                  {era.cover ? (
+                    <span
+                      className="relative size-8 shrink-0 overflow-hidden rounded-sm ring-2"
+                      style={{ ["--tw-ring-color" as string]: era.color }}
+                    >
+                      <Image
+                        alt=""
+                        className="object-cover"
+                        fill
+                        sizes="2rem"
+                        src={era.cover}
+                      />
+                    </span>
+                  ) : (
+                    <span
+                      aria-hidden="true"
+                      className="size-2.5 rounded-full"
+                      style={{ backgroundColor: era.color }}
+                    />
+                  )}
                   {era.name}
                 </IndexRow>
               </li>

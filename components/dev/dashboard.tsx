@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import clsx from "clsx";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -96,7 +97,8 @@ export function DevDashboard({
                 <p className="truncate font-medium">{item.name}</p>
                 <p className="label-caps truncate text-muted">
                   {item.id} · {item.type} · {eraName(item.era)} ·{" "}
-                  {item.images.length} photo{item.images.length === 1 ? "" : "s"}
+                  {item.images.length} photo
+                  {item.images.length === 1 ? "" : "s"}
                 </p>
               </div>
               <span className="hidden text-sm text-muted md:block">
@@ -147,6 +149,13 @@ function EraEditor({ eras, items }: { eras: Era[]; items: MerchItem[] }) {
             <EraRow
               count={items.filter((i) => i.era === era.slug).length}
               era={era}
+              itemPhotos={Array.from(
+                new Set(
+                  items
+                    .filter((i) => i.era === era.slug)
+                    .flatMap((i) => i.images.map((img) => img.src)),
+                ),
+              )}
               key={era.slug}
             />
           ))}
@@ -156,88 +165,221 @@ function EraEditor({ eras, items }: { eras: Era[]; items: MerchItem[] }) {
   );
 }
 
-function EraRow({ era, count = 0 }: { era?: Era; count?: number }) {
+function EraRow({
+  era,
+  count = 0,
+  itemPhotos = [],
+}: {
+  era?: Era;
+  count?: number;
+  /** Photos of items in this era, offered as cover choices. */
+  itemPhotos?: string[];
+}) {
   const router = useRouter();
-  const blank = { name: "", year: new Date().getFullYear(), color: "#888888", description: "" };
-  const [value, setValue] = useState({ ...blank, ...era });
+  const blank = {
+    name: "",
+    year: new Date().getFullYear(),
+    color: "#888888",
+    description: "",
+    cover: "",
+  };
+  const initial = { ...blank, ...era };
+  const [value, setValue] = useState(initial);
+  const [coverFile, setCoverFile] = useState<{
+    file: File;
+    preview: string;
+  } | null>(null);
+  const [picking, setPicking] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const dirty = !era || JSON.stringify({ ...blank, ...era }) !== JSON.stringify(value);
+  const fileInput = useRef<HTMLInputElement>(null);
+  const dirty =
+    !era ||
+    coverFile !== null ||
+    JSON.stringify(initial) !== JSON.stringify(value);
+  const coverPreview = coverFile?.preview ?? value.cover;
+
+  function clearCoverFile() {
+    if (coverFile) URL.revokeObjectURL(coverFile.preview);
+    setCoverFile(null);
+  }
 
   async function save() {
     setBusy(true);
     setError(null);
-    const res = await fetch("/api/dev/eras", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...value, originalSlug: era?.slug }),
-    });
+    const body = new FormData();
+
+    body.append("era", JSON.stringify({ ...value, originalSlug: era?.slug }));
+    if (coverFile) body.append("coverFile", coverFile.file);
+    const res = await fetch("/api/dev/eras", { method: "POST", body });
 
     setBusy(false);
     if (!res.ok) return setError((await res.json()).error ?? "Failed.");
-    if (!era) setValue(blank);
+    const saved = (await res.json()).era as Era;
+
+    clearCoverFile();
+    setValue(era ? { ...blank, ...saved } : blank);
     router.refresh();
   }
 
   async function remove() {
     if (!era || !confirm(`Delete era “${era.name}”?`)) return;
-    const res = await fetch(`/api/dev/eras?slug=${era.slug}`, { method: "DELETE" });
+    const res = await fetch(`/api/dev/eras?slug=${era.slug}`, {
+      method: "DELETE",
+    });
 
     if (!res.ok) return setError((await res.json()).error ?? "Failed.");
     router.refresh();
   }
 
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-separator p-4">
-      <div className="grid items-end gap-3 sm:grid-cols-[auto_1fr_6rem_auto]">
-        <Field label="Colour">
-          <input
-            className="h-10 w-14 cursor-pointer rounded-md border border-separator bg-surface p-1"
-            type="color"
-            value={value.color}
-            onChange={(e) => setValue({ ...value, color: e.target.value })}
-          />
-        </Field>
-        <Field label={era ? `Name · /eras/${era.slug}` : "New era"}>
-          <input
-            className={inputClass}
-            placeholder="Era name"
-            value={value.name}
-            onChange={(e) => setValue({ ...value, name: e.target.value })}
-          />
-        </Field>
-        <Field label="Year">
-          <input
-            className={inputClass}
-            type="number"
-            value={value.year}
-            onChange={(e) => setValue({ ...value, year: Number(e.target.value) })}
-          />
-        </Field>
-        <div className="flex gap-1">
-          <Button disabled={!dirty || busy || !value.name} onClick={save}>
-            {era ? "Save" : "Add era"}
-          </Button>
-          {era && (
-            <Button
-              disabled={count > 0}
-              title={count ? `${count} items use this era` : undefined}
-              variant="danger"
-              onClick={remove}
-            >
-              Delete
-            </Button>
+    <div className="flex flex-col gap-4 rounded-lg border border-separator p-4 sm:flex-row">
+      {/* Cover */}
+      <div className="flex shrink-0 flex-col gap-2 sm:w-40">
+        <span className="label-caps text-muted">Cover</span>
+        <div
+          className="relative aspect-square w-40 overflow-hidden rounded-md ring-1 ring-separator"
+          style={{ backgroundColor: value.color }}
+        >
+          {coverPreview ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img alt="" className="size-full object-cover" src={coverPreview} />
+          ) : (
+            <span className="absolute inset-0 grid place-items-center p-2 text-center text-xs text-black/60">
+              No cover — item photos are used
+            </span>
           )}
         </div>
+        <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs">
+          <button
+            className="text-muted underline hover:text-foreground"
+            type="button"
+            onClick={() => fileInput.current?.click()}
+          >
+            Upload
+          </button>
+          {itemPhotos.length > 0 && (
+            <button
+              className="text-muted underline hover:text-foreground"
+              type="button"
+              onClick={() => setPicking(!picking)}
+            >
+              {picking ? "Close" : "From items"}
+            </button>
+          )}
+          {coverPreview && (
+            <button
+              className="text-danger underline"
+              type="button"
+              onClick={() => {
+                clearCoverFile();
+                setValue({ ...value, cover: "" });
+              }}
+            >
+              Remove
+            </button>
+          )}
+        </div>
+        <input
+          ref={fileInput}
+          accept="image/*"
+          className="hidden"
+          type="file"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+
+            if (file) {
+              clearCoverFile();
+              setCoverFile({ file, preview: URL.createObjectURL(file) });
+              setPicking(false);
+            }
+            e.target.value = "";
+          }}
+        />
       </div>
-      <input
-        aria-label="Description"
-        className={inputClass}
-        placeholder="Short description shown on the era page"
-        value={value.description ?? ""}
-        onChange={(e) => setValue({ ...value, description: e.target.value })}
-      />
-      {error && <p className="text-sm text-danger">{error}</p>}
+
+      {/* Fields */}
+      <div className="flex min-w-0 flex-1 flex-col gap-3">
+        <div className="grid items-end gap-3 sm:grid-cols-[auto_1fr_6rem_auto]">
+          <Field label="Colour">
+            <input
+              className="h-10 w-14 cursor-pointer rounded-md border border-separator bg-surface p-1"
+              type="color"
+              value={value.color}
+              onChange={(e) => setValue({ ...value, color: e.target.value })}
+            />
+          </Field>
+          <Field label={era ? `Name · /eras/${era.slug}` : "New era"}>
+            <input
+              className={inputClass}
+              placeholder="Era name"
+              value={value.name}
+              onChange={(e) => setValue({ ...value, name: e.target.value })}
+            />
+          </Field>
+          <Field label="Year">
+            <input
+              className={inputClass}
+              type="number"
+              value={value.year}
+              onChange={(e) =>
+                setValue({ ...value, year: Number(e.target.value) })
+              }
+            />
+          </Field>
+          <div className="flex gap-1">
+            <Button disabled={!dirty || busy || !value.name} onClick={save}>
+              {busy ? "Saving…" : era ? "Save" : "Add era"}
+            </Button>
+            {era && (
+              <Button
+                disabled={count > 0}
+                title={count ? `${count} items use this era` : undefined}
+                variant="danger"
+                onClick={remove}
+              >
+                Delete
+              </Button>
+            )}
+          </div>
+        </div>
+        <input
+          aria-label="Description"
+          className={inputClass}
+          placeholder="Short description shown on the era page"
+          value={value.description ?? ""}
+          onChange={(e) => setValue({ ...value, description: e.target.value })}
+        />
+        {picking && (
+          <div className="flex flex-wrap gap-2">
+            {itemPhotos.map((src) => (
+              <button
+                aria-label="Use this photo as cover"
+                className={clsx(
+                  "size-16 overflow-hidden rounded bg-surface-secondary ring-1 transition",
+                  value.cover === src && !coverFile
+                    ? "ring-2 ring-foreground"
+                    : "ring-separator hover:ring-foreground/40",
+                )}
+                key={src}
+                type="button"
+                onClick={() => {
+                  clearCoverFile();
+                  setValue({ ...value, cover: src });
+                  setPicking(false);
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img alt="" className="size-full object-contain" src={src} />
+              </button>
+            ))}
+          </div>
+        )}
+        {dirty && era && (
+          <p className="text-xs text-warning">Unsaved changes</p>
+        )}
+        {error && <p className="text-sm text-danger">{error}</p>}
+      </div>
     </div>
   );
 }

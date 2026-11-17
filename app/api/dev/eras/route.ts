@@ -2,21 +2,32 @@ import { NextResponse } from "next/server";
 
 import type { Era } from "@/lib/catalog";
 import { slugify } from "@/lib/catalog";
-import { isDev, readEras, readItems, writeEras } from "@/lib/dev-store";
+import {
+  deleteUnusedImages,
+  isDev,
+  readEras,
+  readItems,
+  saveImage,
+  writeEras,
+} from "@/lib/dev-store";
 
 const forbidden = () =>
   NextResponse.json({ error: "Not available." }, { status: 403 });
 
 /**
- * Create or update an era. Send `{ ...era, originalSlug? }`.
+ * Create or update an era. Multipart body:
+ * - `era`: JSON `{ ...era, originalSlug? }`
+ * - `coverFile` (optional): a new cover image, replaces `era.cover`
  * The slug is kept stable on update so item references don't break.
  */
 export async function POST(request: Request) {
   if (!isDev()) return forbidden();
 
-  const body = (await request.json()) as Partial<Era> & {
+  const form = await request.formData();
+  const body = JSON.parse(String(form.get("era") ?? "{}")) as Partial<Era> & {
     originalSlug?: string;
   };
+  const coverFile = form.get("coverFile");
   const eras = await readEras();
   const name = body.name?.trim();
   const year = Number(body.year);
@@ -40,18 +51,28 @@ export async function POST(request: Request) {
     );
   }
 
+  const cover =
+    coverFile instanceof File && coverFile.size > 0
+      ? await saveImage(coverFile, `era-${slug}`)
+      : body.cover?.trim();
+
   const era: Era = {
     slug,
     name,
     year,
     color: body.color || "#888888",
     ...(body.description?.trim() && { description: body.description.trim() }),
-    ...(body.cover?.trim() && { cover: body.cover.trim() }),
+    ...(cover && { cover }),
   };
 
   await writeEras(
     existing ? eras.map((e) => (e.slug === slug ? era : e)) : [...eras, era],
   );
+
+  // Remove the previous cover file if nothing uses it anymore.
+  if (existing?.cover && existing.cover !== era.cover) {
+    await deleteUnusedImages([existing.cover], await readItems());
+  }
 
   return NextResponse.json({ era });
 }
@@ -61,7 +82,8 @@ export async function DELETE(request: Request) {
   if (!isDev()) return forbidden();
 
   const slug = new URL(request.url).searchParams.get("slug");
-  const used = (await readItems()).filter((i) => i.era === slug).length;
+  const items = await readItems();
+  const used = items.filter((i) => i.era === slug).length;
 
   if (used) {
     return NextResponse.json(
@@ -70,7 +92,11 @@ export async function DELETE(request: Request) {
     );
   }
 
-  await writeEras((await readEras()).filter((e) => e.slug !== slug));
+  const eras = await readEras();
+  const removed = eras.find((e) => e.slug === slug);
+
+  await writeEras(eras.filter((e) => e.slug !== slug));
+  if (removed?.cover) await deleteUnusedImages([removed.cover], items);
 
   return NextResponse.json({ ok: true });
 }

@@ -119,7 +119,27 @@ export default function ErasPage() {
                   background: `linear-gradient(135deg, ${era.color}, color-mix(in oklab, ${era.color} 45%, black))`,
                 }}
               >
-                {covers.length > 1 ? (
+                {era.cover ? (
+                  <>
+                    {/* Blurred backdrop so square covers fill the wide panel. */}
+                    <Image
+                      alt=""
+                      className="scale-125 object-cover opacity-70 blur-2xl"
+                      fill
+                      sizes="10vw"
+                      src={era.cover}
+                    />
+                    <div className="absolute inset-[8%] transition duration-500 group-hover:scale-[1.03] motion-reduce:transition-none">
+                      <Image
+                        alt={`${era.name} cover`}
+                        className="object-contain drop-shadow-2xl"
+                        fill
+                        sizes="(min-width: 768px) 35vw, 90vw"
+                        src={era.cover}
+                      />
+                    </div>
+                  </>
+                ) : covers.length > 1 ? (
                   <div className="absolute inset-0 grid grid-cols-2 gap-px p-px">
                     {covers.slice(0, 4).map((src) => (
                       <div
