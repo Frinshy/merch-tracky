@@ -3,7 +3,7 @@ import Image from "next/image";
 import NextLink from "next/link";
 
 import { CurrentEraSpotlight } from "@/components/eras/current-era-spotlight";
-import { EraTourList } from "@/components/eras/era-tour-list";
+import { EraShowcase } from "@/components/eras/era-showcase";
 import { ItemRail } from "@/components/items/item-rail";
 import { SectionHeading } from "@/components/ui/section-heading";
 import {
@@ -72,7 +72,7 @@ export default function HomePage() {
         <ItemRail items={recent} label="Recently added items" preloadCount={5} />
       </section>
 
-      <EraTourList />
+      <EraShowcase />
 
       <section className="flex flex-col gap-6">
         <SectionHeading title="Flip through by format" />
