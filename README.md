@@ -23,7 +23,15 @@ Only the repository owner can add content. The public site is read-only, and con
 2. Add, edit or delete items and eras. Photos are resized to max 2000px, converted to WebP and saved to `public/items/`.
 3. Commit `data/` and `public/items/`, then push. The deployment rebuilds with the new content.
 
-The `/dev` pages and `/api/dev/*` routes only work under `next dev`. In production they return 404.
+The admin is excluded from production builds entirely (see `next.config.mjs`):
+
+- Admin routes use the `.dev.tsx` / `.dev.ts` extension (`app/dev/**/page.dev.tsx`,
+  `app/api/dev/**/route.dev.ts`). These extensions are only registered under `next dev`, so
+  `pnpm build` never compiles them, and `components/admin` / `lib/admin` aren't bundled.
+  In production, `/dev` and `/api/dev/*` simply don't exist (404).
+- The floating dev toolbar is aliased to an empty stub (`dev-toolbar.stub.tsx`) in builds.
+
+Adding a new admin route? Give it the `.dev.tsx` / `.dev.ts` extension.
 
 ## Development
 
@@ -41,8 +49,8 @@ The HeroUI MCP server is configured in `opencode.json` for AI-assisted work on t
 
 ```
 app/                    Routes only: pages, layouts, metadata, sitemap/robots
-  api/dev/              Admin API (thin handlers around lib/admin)
-  dev/                  Admin pages (development only)
+  api/dev/              Admin API (thin handlers around lib/admin), dev-only
+  dev/                  Admin pages, dev-only (*.dev.tsx)
 components/
   layout/               Navbar, footer, theme switch, dev toolbar
   ui/                   Small shared building blocks (ButtonLink, SectionHeading, icons…)
