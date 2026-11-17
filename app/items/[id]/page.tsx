@@ -1,74 +1,111 @@
-import { Card } from "@heroui/react";
-import Link from "next/link";
+import { Breadcrumbs, Chip } from "@heroui/react";
+import type { Metadata } from "next";
+import NextLink from "next/link";
 import { notFound } from "next/navigation";
-import { ItemGallery } from "@/components/item-gallery";
-import MerchItems from "@/data/merch-items.json";
 
-export default async function Item({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const item = MerchItems.MerchItems.find((merchItem) => merchItem.id === id);
+import { ItemDetails } from "@/components/items/item-details";
+import { ItemGallery } from "@/components/items/item-gallery";
+import { ItemRail } from "@/components/items/item-rail";
+import { PrevNextNav } from "@/components/ui/prev-next-nav";
+import { SectionHeading } from "@/components/ui/section-heading";
+import { coverOf, getEra, getItem, items, itemsInEra, neighbours } from "@/lib/catalog/data";
 
-  if (!item) {
-    notFound();
-  }
+type Props = { params: Promise<{ id: string }> };
+
+const RELATED_COUNT = 10;
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return items.map((item) => ({ id: item.id }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const item = getItem((await params).id);
+
+  if (!item) return {};
+  const eraName = getEra(item.era)?.name ?? item.era;
+
+  return {
+    title: item.name,
+    description: item.description || `${item.type} from the ${eraName} era.`,
+    openGraph: { images: [coverOf(item).src] },
+  };
+}
+
+export default async function ItemPage({ params }: Props) {
+  const item = getItem((await params).id);
+
+  if (!item) notFound();
+
+  const era = getEra(item.era);
+  const eraItems = itemsInEra(item.era);
+  const { prev, next } = neighbours(
+    eraItems,
+    eraItems.findIndex((i) => i.id === item.id),
+  );
+  const related = eraItems.filter((i) => i.id !== item.id).slice(0, RELATED_COUNT);
 
   return (
-    <div className="min-h-screen w-full">
-      <nav aria-label="Item navigation" className="mb-4">
-        <Link
-          className="group inline-flex items-center gap-2 rounded-md px-1 py-1 text-sm font-medium text-muted transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
-          href="/items"
-        >
-          <span
-            aria-hidden="true"
-            className="text-base transition-transform group-hover:-translate-x-0.5"
-          >
-            &#8592;
-          </span>
-          Back to search
-        </Link>
-      </nav>
-      <div className="grid w-full gap-6 rounded-lg border border-separator bg-surface p-4 shadow-sm sm:p-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)] lg:items-start lg:gap-10">
-        <ItemGallery item={item} />
-        <div className="flex min-w-0 flex-col gap-5">
-          <div className="flex flex-col gap-3 border-b border-separator pb-6">
-            {/* <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">
-              Item details
-            </p> */}
-            <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-              {item.name}
-            </h1>
-            <p className="max-w-prose text-sm leading-6 text-muted-foreground">
-              {item.description}
-            </p>
-          </div>
-          {/* <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold">Inventory snapshot</h2>
-            <span className="rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-medium text-success">
-              Active
-            </span>
-          </div> */}
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <ItemInfoCard label="Type" text={item.type} />
-            <ItemInfoCard label="Era" text={item.era} />
+    <div className="flex flex-col gap-20 pt-8">
+      <div className="flex flex-col gap-6">
+        <Breadcrumbs>
+          <Breadcrumbs.Item href="/items">Catalog</Breadcrumbs.Item>
+          {era && <Breadcrumbs.Item href={`/eras/${era.slug}`}>{era.name}</Breadcrumbs.Item>}
+          <Breadcrumbs.Item>{item.name}</Breadcrumbs.Item>
+        </Breadcrumbs>
+
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
+          <ItemGallery images={item.images} name={item.name} />
+
+          <div className="flex min-w-0 flex-col gap-8 lg:sticky lg:top-24 lg:self-start">
+            <div className="flex flex-col gap-4">
+              {item.limited && (
+                <Chip className="w-fit" color="accent" size="sm" variant="primary">
+                  Limited
+                </Chip>
+              )}
+              <h1 className="font-display text-5xl leading-[0.95] sm:text-6xl">{item.name}</h1>
+              {item.description && (
+                <p className="max-w-prose leading-7 text-muted">{item.description}</p>
+              )}
+            </div>
+
+            <ItemDetails item={item} />
+
+            {item.tags && item.tags.length > 0 && (
+              <ul aria-label="Tags" className="flex flex-wrap gap-2">
+                {item.tags.map((tag) => (
+                  <li key={tag}>
+                    <NextLink href={`/items?q=${encodeURIComponent(tag)}`}>
+                      <Chip className="hover:opacity-80" size="sm" variant="secondary">
+                        #{tag}
+                      </Chip>
+                    </NextLink>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <PrevNextNav
+              label={`More from ${era?.name ?? "this era"}`}
+              next={next && { href: `/items/${next.id}`, label: next.name }}
+              prev={prev && { href: `/items/${prev.id}`, label: prev.name }}
+            />
           </div>
         </div>
       </div>
-    </div>
-  );
-}
 
-function ItemInfoCard({ label, text }: { label: string; text: string }) {
-  return (
-    <Card className="border border-separator bg-surface-secondary p-4 shadow-none transition hover:border-accent/50">
-      <p className="text-sm font-medium text-muted">{label}</p>
-      <p className="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">
-        {text}
-      </p>
-    </Card>
+      {era && related.length > 0 && (
+        <section className="flex flex-col gap-6">
+          <SectionHeading
+            action={{ href: `/eras/${era.slug}`, label: `All ${era.name} items` }}
+            eyebrow="Same era"
+            title={`More from ${era.name}`}
+          />
+          <ItemRail items={related} label={`More from ${era.name}`} showEra={false} />
+        </section>
+      )}
+    </div>
   );
 }

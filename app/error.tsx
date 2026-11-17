@@ -1,31 +1,36 @@
 "use client";
 
+import { Button } from "@heroui/react";
 import { useEffect } from "react";
 
-export default function Error({
+import { ButtonLink } from "@/components/ui/button-link";
+import { PageHeader } from "@/components/ui/page-header";
+
+export default function ErrorPage({
   error,
   reset,
 }: {
-  error: Error;
+  error: Error & { digest?: string };
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
-    /* eslint-disable no-console */
+    // eslint-disable-next-line no-console
     console.error(error);
   }, [error]);
 
   return (
-    <div>
-      <h2>Something went wrong!</h2>
-      <button
-        onClick={
-          // Attempt to recover by trying to re-render the segment
-          () => reset()
-        }
-      >
-        Try again
-      </button>
+    <div className="flex flex-col items-start gap-6 py-24">
+      <PageHeader
+        description="The page failed to load. Try again, or head back home."
+        eyebrow="Error"
+        title="Something went wrong."
+      />
+      <div className="flex gap-2">
+        <Button onPress={reset}>Try again</Button>
+        <ButtonLink href="/" variant="secondary">
+          Go home
+        </ButtonLink>
+      </div>
     </div>
   );
 }

@@ -2,20 +2,20 @@ export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
   name: "Merch Tracky",
-  description: "A simple app to track merchandise items and their details.",
+  tagline: "Louis Tomlinson merch archive",
+  description:
+    "An unofficial fan archive of Louis Tomlinson merchandise — every release, from every era.",
+  /** Public URL, used for metadata, sitemap and social previews. */
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "http://localhost:3000"),
   navItems: [
-    {
-      label: "Home",
-      href: "/",
-    },
-    {
-      label: "Items",
-      href: "/items",
-    },
+    { label: "Eras", href: "/eras" },
+    { label: "Catalog", href: "/items" },
   ],
   links: {
     github: "https://github.com/frinshy/merch-tracky",
-    twitter: "https://twitter.com/hero_ui",
-    discord: "https://discord.gg/9b6yyZKmH4",
   },
 };

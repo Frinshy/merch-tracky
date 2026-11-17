@@ -1,0 +1,12 @@
+{
+  // Used by `pnpm typecheck`.
+  //
+  // Next.js generates route types separately for `next build` (.next/types)
+  // and `next dev` (.next/dev/types), and next-env.d.ts imports whichever set
+  // was generated last. The two sets differ (dev-only admin routes don't exist
+  // in builds) and declare the same globals, so mixing them fails. This config
+  // always checks against the dev set, which covers every route.
+  "extends": "./tsconfig.json",
+  "include": ["types/**/*.d.ts", "**/*.ts", "**/*.tsx", ".next/dev/types/**/*.ts"],
+  "exclude": ["node_modules", "next-env.d.ts", ".next/types"]
+}

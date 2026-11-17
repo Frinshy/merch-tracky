@@ -1,11 +1,12 @@
 {
-  "MerchItems": [
+  "items": [
     {
       "id": "test",
       "name": "Test Item",
       "description": "This is a test item for demonstration purposes.",
       "type": "CD",
-      "era": "HDWG",
+      "era": "how-did-i-get-here",
+      "addedAt": "2026-05-01",
       "images": [
         {
           "src": "/items/test.jpeg",
@@ -34,7 +35,8 @@
       "name": "After Hours CD",
       "description": "A studio release from the artist's after-hours era.",
       "type": "CD",
-      "era": "After Hours",
+      "era": "faith-in-the-future",
+      "addedAt": "2026-05-02",
       "images": [
         {
           "src": "/items/test.jpeg",
@@ -48,7 +50,8 @@
       "name": "Live Tour Shirt",
       "description": "Official tour merch from the live release cycle.",
       "type": "Apparel",
-      "era": "Live Tour",
+      "era": "walls",
+      "addedAt": "2026-05-03",
       "images": [
         {
           "src": "/items/test.jpeg",
@@ -62,11 +65,43 @@
       "name": "Limited Edition Vinyl",
       "description": "A limited pressing from the latest release era.",
       "type": "Vinyl",
-      "era": "Latest",
+      "era": "how-did-i-get-here",
+      "addedAt": "2026-05-04",
+      "limited": true,
       "images": [
         {
           "src": "/items/test.jpeg",
           "alt": "Limited Edition Vinyl",
+          "author": "Jeff"
+        }
+      ]
+    },
+    {
+      "id": "test-2",
+      "name": "test",
+      "description": "test",
+      "type": "CD",
+      "era": "how-did-i-get-here",
+      "addedAt": "2026-05-05",
+      "images": [
+        {
+          "src": "/items/test.jpeg",
+          "alt": "test",
+          "author": "Jeff"
+        }
+      ]
+    },
+    {
+      "id": "bobby",
+      "name": "Bobby",
+      "description": "",
+      "type": "CD",
+      "era": "how-did-i-get-here",
+      "addedAt": "2026-05-06",
+      "images": [
+        {
+          "src": "/items/test.jpeg",
+          "alt": "Bobby",
           "author": "Jeff"
         }
       ]
