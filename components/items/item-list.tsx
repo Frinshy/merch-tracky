@@ -12,7 +12,7 @@ export function ItemList({ items }: { items: readonly MerchItem[] }) {
     <ul className="divide-y divide-separator border-y border-separator">
       {items.map((item) => (
         <li key={item.id} className="group relative flex items-center gap-4 py-3">
-          <div className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-surface-secondary">
+          <div className="relative size-14 shrink-0 overflow-hidden rounded-sm bg-surface ring-1 ring-separator">
             <Image
               fill
               alt=""
@@ -23,7 +23,7 @@ export function ItemList({ items }: { items: readonly MerchItem[] }) {
           </div>
           <div className="min-w-0 flex-1">
             <NextLink
-              className="font-medium after:absolute after:inset-0 after:content-[''] group-hover:underline"
+              className="font-semibold after:absolute after:inset-0 after:content-[''] group-hover:underline"
               href={`/items/${item.id}`}
             >
               {item.name}

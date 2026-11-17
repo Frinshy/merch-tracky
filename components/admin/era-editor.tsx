@@ -88,7 +88,7 @@ export function EraEditor({
       <div className="flex shrink-0 flex-col gap-2 sm:w-40">
         <span className="text-sm font-medium">Cover</span>
         <div
-          className="relative aspect-square w-40 overflow-hidden rounded-lg ring-1 ring-separator"
+          className="relative aspect-square w-40 overflow-hidden rounded-sm ring-1 ring-separator"
           style={{ backgroundColor: draft.color }}
         >
           {coverPreview ? (
@@ -173,7 +173,7 @@ export function EraEditor({
                 key={src}
                 aria-label="Use this photo as cover"
                 className={clsx(
-                  "size-16 overflow-hidden rounded-md bg-surface-tertiary ring-1 transition",
+                  "size-16 overflow-hidden rounded-sm bg-surface-tertiary ring-1 transition",
                   draft.cover === src && !coverUpload
                     ? "ring-2 ring-accent"
                     : "ring-separator hover:ring-foreground/40",
@@ -236,7 +236,7 @@ function EraColorPicker({ value, onChange }: { value: string; onChange: (hex: st
       <span className="text-sm font-medium">Colour</span>
       <ColorPicker value={value} onChange={(color) => onChange(color.toString("hex"))}>
         <ColorPicker.Trigger aria-label="Pick era colour">
-          <ColorSwatch className="size-10 rounded-lg" />
+          <ColorSwatch className="size-10 rounded-sm" />
         </ColorPicker.Trigger>
         <ColorPicker.Popover className="flex w-64 flex-col gap-3 p-3">
           <ColorArea

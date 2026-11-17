@@ -26,7 +26,7 @@ export function PageHeader({
           </TextLink>
         )}
         {eyebrow && <p className="label-caps text-muted">{eyebrow}</p>}
-        <h1 className="text-balance font-display text-5xl leading-[0.95] sm:text-6xl">{title}</h1>
+        <h1 className="type-display text-balance text-6xl leading-[0.85] sm:text-8xl">{title}</h1>
         {description && <p className="max-w-xl text-muted">{description}</p>}
       </div>
       {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}

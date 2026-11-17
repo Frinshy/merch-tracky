@@ -10,6 +10,7 @@ import { useState } from "react";
 import { ButtonLink } from "@/components/ui/button-link";
 import { GithubIcon, Logo } from "@/components/ui/icons";
 import { siteConfig } from "@/config/site";
+import { ARTIST } from "@/lib/catalog/data";
 
 import { ThemeSwitch } from "./theme-switch";
 
@@ -23,9 +24,18 @@ export function Navbar() {
     <nav className="fixed top-0 z-40 w-full border-b border-separator bg-background/80 backdrop-blur-lg">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <div className="flex items-center gap-8">
-          <NextLink className="flex items-center gap-2" href="/">
+          <NextLink
+            aria-label={`${ARTIST} merch archive, home`}
+            className="flex items-center gap-2"
+            href="/"
+          >
             <Logo />
-            <span className="font-display text-xl leading-none">{siteConfig.name}</span>
+            <span className="flex flex-col">
+              <span className="type-display text-2xl leading-none">{ARTIST}</span>
+              <span className="label-caps text-[0.625rem] leading-none text-muted">
+                Merch archive
+              </span>
+            </span>
           </NextLink>
           <ul className="hidden gap-6 sm:flex">
             {siteConfig.navItems.map((item) => (
@@ -103,7 +113,7 @@ function NavLink({
     <NextLink
       aria-current={active ? "page" : undefined}
       className={clsx(
-        "text-sm transition-colors hover:text-foreground",
+        "type-display text-lg leading-none transition-colors hover:text-foreground",
         active ? "font-medium text-foreground" : "text-muted",
         className,
       )}

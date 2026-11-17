@@ -12,7 +12,7 @@ export function AdminDashboard({ items, eras }: { items: MerchItem[]; eras: Era[
   const sortedEras = [...eras].sort((a, b) => a.year - b.year);
 
   return (
-    <div className="flex flex-col gap-14">
+    <div className="flex flex-col gap-16">
       <PageHeader
         actions={
           <ButtonLink href="/dev/items/new">

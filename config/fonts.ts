@@ -1,22 +1,11 @@
-import {
-  Fira_Code as FontMono,
-  Inter as FontSans,
-  Instrument_Serif as FontDisplay,
-} from "next/font/google";
+import { Archivo } from "next/font/google";
 
-export const fontSans = FontSans({
+/**
+ * One family carries the whole site: Archivo at normal width for reading,
+ * squeezed to its narrowest width for tour-print display type.
+ */
+export const fontSans = Archivo({
   subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-export const fontMono = FontMono({
-  subsets: ["latin"],
-  variable: "--font-fira",
-});
-
-export const fontDisplay = FontDisplay({
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-  variable: "--font-instrument",
+  axes: ["wdth"],
+  variable: "--font-archivo",
 });

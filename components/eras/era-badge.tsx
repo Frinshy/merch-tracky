@@ -8,7 +8,10 @@ export function EraDot({ color, className }: { color?: string; className?: strin
   return (
     <span
       aria-hidden="true"
-      className={clsx("inline-block size-2 shrink-0 rounded-full", className)}
+      className={clsx(
+        "inline-block size-2 shrink-0 rounded-full ring-1 ring-black/15 dark:ring-0",
+        className,
+      )}
       style={{ backgroundColor: color ?? "currentColor" }}
     />
   );
@@ -36,7 +39,10 @@ export function EraBadge({
   if (plain || !era) return <span className={classes}>{content}</span>;
 
   return (
-    <NextLink className={clsx(classes, "hover:text-foreground")} href={`/eras/${era.slug}`}>
+    <NextLink
+      className={clsx(classes, "focus-outline rounded-sm hover:text-foreground")}
+      href={`/eras/${era.slug}`}
+    >
       {content}
     </NextLink>
   );
