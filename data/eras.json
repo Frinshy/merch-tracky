@@ -1,0 +1,32 @@
+{
+  "eras": [
+    {
+      "slug": "walls",
+      "name": "Walls",
+      "year": 2020,
+      "color": "#7d93b2",
+      "description": "The debut solo album era and the world tour that followed it."
+    },
+    {
+      "slug": "faith-in-the-future",
+      "name": "Faith in the Future",
+      "year": 2022,
+      "color": "#c9a227",
+      "description": "The second studio album era, its world tour and the Away From Home festival."
+    },
+    {
+      "slug": "how-did-i-get-here",
+      "name": "How Did I Get Here?",
+      "year": 2026,
+      "color": "#e0673a",
+      "description": "The third studio album era."
+    },
+    {
+      "slug": "one-offs",
+      "name": "One-offs",
+      "year": 2017,
+      "color": "#9a8fa8",
+      "description": "Singles, collaborations, charity drops and anything that doesn't belong to an album era."
+    }
+  ]
+}

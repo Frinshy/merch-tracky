@@ -1,109 +1,109 @@
 "use client";
 
-import { Button } from "@heroui/react";
 import Image from "next/image";
 import { useState } from "react";
+import clsx from "clsx";
 
-type GalleryItem = {
-  id: string;
-  images: {
-    src: string;
-    alt: string;
-  }[];
-};
+import { PLACEHOLDER_IMAGE, type MerchImage } from "@/lib/catalog";
 
-export function ItemGallery({ item }: { item: GalleryItem }) {
-  const itemImages = item.images;
-  const [activeIndex, setActiveIndex] = useState(0);
-  const activeImage = itemImages[activeIndex];
+export function ItemGallery({
+  images,
+  name,
+}: {
+  images: MerchImage[];
+  name: string;
+}) {
+  const list = images.length ? images : [{ ...PLACEHOLDER_IMAGE, alt: name }];
+  const [active, setActive] = useState(0);
+  const image = list[active];
+  const many = list.length > 1;
 
-  const showPrevious = () => {
-    setActiveIndex((currentIndex) =>
-      currentIndex === 0 ? itemImages.length - 1 : currentIndex - 1,
-    );
-  };
-
-  const showNext = () => {
-    setActiveIndex((currentIndex) =>
-      currentIndex === itemImages.length - 1 ? 0 : currentIndex + 1,
-    );
-  };
+  const go = (delta: number) =>
+    setActive((i) => (i + delta + list.length) % list.length);
 
   return (
-    <section
-      aria-label="Item images"
-      className="flex min-w-0 flex-col items-center gap-3"
-    >
-      <div className="relative aspect-[3/4] w-full max-w-xl overflow-hidden rounded-lg border border-separator bg-surface-secondary shadow-sm">
+    <section aria-label="Item photos" className="flex min-w-0 flex-col gap-3">
+      <div
+        className="group relative aspect-square overflow-hidden rounded-lg bg-surface-secondary ring-1 ring-separator"
+        // Arrow keys switch photos when the gallery is focused.
+        tabIndex={many ? 0 : -1}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowLeft") go(-1);
+          if (e.key === "ArrowRight") go(1);
+        }}
+      >
         <Image
-          alt={activeImage.alt}
-          aria-hidden="true"
-          className="scale-110 object-cover opacity-60 blur-2xl"
+          alt={image.alt || name}
+          className="object-contain p-[6%]"
           fill
           priority
-          sizes="(min-width: 1024px) 45vw, 100vw"
-          src={activeImage.src}
+          sizes="(min-width: 1024px) 55vw, 100vw"
+          src={image.src}
         />
-        <Image
-          alt={activeImage.alt}
-          className="relative z-10 object-contain"
-          fill
-          priority
-          sizes="(min-width: 1024px) 45vw, 100vw"
-          src={activeImage.src}
-        />
-        {itemImages.length > 1 && (
-          <div className="absolute inset-x-3 top-1/2 z-20 flex -translate-y-1/2 justify-between sm:inset-x-4">
-            <Button
-              aria-label="Show previous image"
-              className="grid size-10 place-items-center rounded-full border border-separator bg-surface/85 text-lg text-surface-foreground shadow-md backdrop-blur-md transition hover:scale-105 hover:bg-surface sm:size-11"
-              isIconOnly
-              onPress={showPrevious}
-            >
-              <span aria-hidden="true">&#8592;</span>
-            </Button>
-            <Button
-              aria-label="Show next image"
-              className="grid size-10 place-items-center rounded-full border border-separator bg-surface/85 text-lg text-surface-foreground shadow-md backdrop-blur-md transition hover:scale-105 hover:bg-surface sm:size-11"
-              isIconOnly
-              onPress={showNext}
-            >
-              <span aria-hidden="true">&#8594;</span>
-            </Button>
-          </div>
+        {many && (
+          <>
+            <GalleryButton label="Previous photo" side="left" onClick={() => go(-1)} />
+            <GalleryButton label="Next photo" side="right" onClick={() => go(1)} />
+            <span className="label-caps absolute bottom-3 right-3 rounded-sm bg-background/80 px-1.5 py-0.5 backdrop-blur">
+              {active + 1} / {list.length}
+            </span>
+          </>
         )}
       </div>
-      <div className="flex min-w-0 max-w-full touch-pan-x gap-3 overflow-x-auto pb-1">
-        {itemImages.map((image, index) => (
-          <Button
-            aria-label={`Show image ${index + 1}`}
-            aria-pressed={activeIndex === index}
-            className={`relative aspect-[3/4] h-24 w-[4.5rem] shrink-0 overflow-hidden rounded-md border bg-surface-secondary transition hover:-translate-y-0.5 sm:h-32 sm:w-24 ${
-              activeIndex === index
-                ? "border-accent ring-2 ring-accent/30"
-                : "border-separator opacity-70 hover:opacity-100"
-            }`}
-            key={image.src + " " + index}
-            onPress={() => setActiveIndex(index)}
-          >
-            <Image
-              alt=""
-              aria-hidden="true"
-              className="scale-110 object-cover opacity-60 blur-xl"
-              fill
-              sizes="96px"
-              src={image.src}
-            />
-            <Image
-              alt={image.alt}
-              className="relative z-10 object-contain"
-              fill
-              sizes="96px"
-              src={image.src}
-            />
-          </Button>
-        ))}
-      </div>
+
+      {image.author && (
+        <p className="label-caps text-muted">Photo: {image.author}</p>
+      )}
+
+      {many && (
+        <div className="scrollbar-none flex gap-2 overflow-x-auto">
+          {list.map((img, index) => (
+            <button
+              aria-label={`Show photo ${index + 1}`}
+              aria-pressed={active === index}
+              className={clsx(
+                "relative size-16 shrink-0 overflow-hidden rounded-md bg-surface-secondary ring-1 transition sm:size-20",
+                active === index
+                  ? "ring-2 ring-foreground"
+                  : "opacity-60 ring-separator hover:opacity-100",
+              )}
+              key={img.src + index}
+              onClick={() => setActive(index)}
+            >
+              <Image
+                alt=""
+                className="object-contain p-1"
+                fill
+                sizes="80px"
+                src={img.src}
+              />
+            </button>
+          ))}
+        </div>
+      )}
     </section>
+  );
+}
+
+function GalleryButton({
+  label,
+  side,
+  onClick,
+}: {
+  label: string;
+  side: "left" | "right";
+  onClick: () => void;
+}) {
+  return (
+    <button
+      aria-label={label}
+      className={clsx(
+        "absolute top-1/2 grid size-10 -translate-y-1/2 place-items-center rounded-full bg-background/80 text-lg shadow backdrop-blur transition hover:bg-background sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100",
+        side === "left" ? "left-3" : "right-3",
+      )}
+      onClick={onClick}
+    >
+      <span aria-hidden="true">{side === "left" ? "←" : "→"}</span>
+    </button>
   );
 }

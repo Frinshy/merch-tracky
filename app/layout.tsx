@@ -5,14 +5,21 @@ import clsx from "clsx";
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
-import { fontSans } from "@/config/fonts";
+import { fontDisplay, fontMono, fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 import { DevToolbar } from "@/components/dev-toolbar";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ??
+      (process.env.VERCEL_PROJECT_PRODUCTION_URL
+        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+        : "http://localhost:3000"),
+  ),
   title: {
-    default: siteConfig.name,
-    template: `%s - ${siteConfig.name}`,
+    default: `${siteConfig.name} — Louis Tomlinson merch archive`,
+    template: `%s · ${siteConfig.name}`,
   },
   description: siteConfig.description,
   icons: {
@@ -37,28 +44,20 @@ export default function RootLayout({
       <head />
       <body
         className={clsx(
-          "min-h-screen text-foreground bg-background font-sans antialiased",
+          "min-h-screen bg-background font-sans text-foreground antialiased",
           fontSans.variable,
+          fontMono.variable,
+          fontDisplay.variable,
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex min-h-screen flex-col">
             <Navbar />
-            <main className="container mx-auto flex-grow max-w-7xl px-6 pt-20">
+            <main className="mx-auto w-full max-w-7xl flex-grow px-4 pt-16 sm:px-6">
               {children}
             </main>
+            <Footer />
             <DevToolbar />
-            {/* <footer className="flex w-full items-center justify-center py-3">
-              <a
-                className="flex items-center gap-1 text-current no-underline"
-                href="https://heroui.com?utm_source=next-app-template"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <span className="text-muted">Powered by</span>
-                <p className="text-accent">HeroUI</p>
-              </a>
-            </footer> */}
           </div>
         </Providers>
       </body>

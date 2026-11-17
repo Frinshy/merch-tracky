@@ -3,39 +3,36 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+/** Floating shortcut to the admin tools. Only rendered by `next dev`. */
 export function DevToolbar() {
-  if (process.env.NODE_ENV !== "development") {
+  const pathname = usePathname();
+
+  if (process.env.NODE_ENV !== "development" || pathname.startsWith("/dev")) {
     return null;
   }
 
-  const pathname = usePathname();
-
-  // Don't clutter the add-merch page itself with the toolbar if you're already there (optional)
-  // But having it persistent is nice. Let's make it fixed at the bottom-right.
+  const itemId = pathname.match(/^\/items\/([^/]+)$/)?.[1];
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 bg-content1/90 backdrop-blur-md border border-warning/40 shadow-lg rounded-xl px-4 py-3 flex items-center gap-3 text-xs">
-      <div className="flex items-center gap-2">
-        <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-warning opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-warning"></span>
-        </span>
-        <span className="font-semibold text-warning-600 dark:text-warning-400">DEV MODE</span>
-      </div>
-
-      <div className="h-4 w-px bg-default-300" />
-
-      <div className="flex items-center gap-2">
-        {pathname !== "/dev/add-merch" && (
-          <Link
-            href="/dev/add-merch"
-            className="px-2.5 py-1.5 bg-primary text-primary-foreground font-medium rounded-lg hover:opacity-95 transition"
-          >
-            + Add Merch
-          </Link>
-        )}
-        <span className="text-default-400">Local git uncommitted changes ready</span>
-      </div>
+    <div className="fixed bottom-4 right-4 z-50 flex items-center gap-1 rounded-lg border border-warning/40 bg-background/90 p-1 text-xs shadow-lg backdrop-blur">
+      <span className="label-caps px-2 text-warning">Dev</span>
+      <Link className="rounded-md px-2.5 py-1.5 hover:bg-surface-secondary" href="/dev">
+        Admin
+      </Link>
+      {itemId && (
+        <Link
+          className="rounded-md px-2.5 py-1.5 hover:bg-surface-secondary"
+          href={`/dev/items/${itemId}`}
+        >
+          Edit item
+        </Link>
+      )}
+      <Link
+        className="rounded-md bg-foreground px-2.5 py-1.5 text-background"
+        href="/dev/items/new"
+      >
+        + Add
+      </Link>
     </div>
   );
 }

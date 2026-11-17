@@ -1,127 +1,134 @@
-import { Card, Chip } from "@heroui/react";
 import Image from "next/image";
 import Link from "next/link";
-import MerchItems from "@/data/merch-items.json";
 
-const items = MerchItems.MerchItems;
-const formats = new Set(items.map((item) => item.type));
-const eras = new Set(items.map((item) => item.era));
-const latestItems = items.slice(0, 4);
+import { SearchIcon } from "@/components/icons";
+import { ItemGrid } from "@/components/item-card";
+import { SectionHeading } from "@/components/section-heading";
+import {
+  ARTIST,
+  allTypes,
+  eraCover,
+  eras,
+  items,
+  itemsInEra,
+  newestFirst,
+} from "@/lib/catalog";
+
+const recent = newestFirst(items).slice(0, 10);
 
 export default function Home() {
   return (
-    <section className="flex flex-col gap-6 pb-16 pt-4 md:gap-8 md:pt-8">
-      <header className="max-w-3xl">
-        <p className="text-sm font-medium text-accent">Artist merch archive</p>
-        <h1 className="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">
-          Find every release, from every era.
-        </h1>
-        <p className="mt-4 max-w-2xl text-base leading-7 text-muted">
-          A public catalog for discovering this artist&apos;s merch by release,
-          format, and era.
-        </p>
-      </header>
-
-      <Link
-        className="group relative overflow-hidden rounded-xl bg-accent p-6 text-accent-foreground shadow-lg transition hover:shadow-xl sm:p-10"
-        href="/items"
-      >
-        <div className="relative z-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
-          <div>
-            <Chip
-              className="bg-accent-foreground/15 text-accent-foreground"
-              variant="soft"
-            >
-              Search the archive
-            </Chip>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight">
-              What are you looking for?
-            </h2>
-            <p className="mt-2 max-w-xl text-accent-foreground/75">
-              Search by name, then narrow results by merch format or era.
-            </p>
-          </div>
-          <span className="inline-flex h-12 shrink-0 items-center justify-center rounded-lg bg-accent-foreground px-5 text-sm font-semibold text-accent transition group-hover:translate-x-1">
-            Open search{" "}
-            <span aria-hidden="true" className="ml-2">
-              →
-            </span>
-          </span>
+    <div className="flex flex-col gap-20 pb-8 pt-12 sm:pt-20">
+      {/* Hero */}
+      <section className="flex flex-col gap-8">
+        <div className="flex flex-col gap-4">
+          <p className="label-caps text-accent">
+            Unofficial archive · {ARTIST}
+          </p>
+          <h1 className="max-w-5xl text-balance font-display text-5xl leading-[0.95] tracking-tight sm:text-7xl lg:text-8xl">
+            Every release, <em className="text-muted">from every era.</em>
+          </h1>
         </div>
-        <div className="absolute -right-14 -top-24 size-72 rounded-full border-[28px] border-accent-foreground/10" />
-      </Link>
-
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-        {[
-          [items.length, "Released items"],
-          [formats.size, "Merch formats"],
-          [eras.size, "Eras covered"],
-          [latestItems.length, "Latest releases"],
-        ].map(([value, label]) => (
-          <Card
-            key={label}
-            className="border border-separator bg-surface p-4 shadow-sm sm:p-5"
+        <form
+          action="/items"
+          className="flex w-full max-w-2xl items-center gap-3 rounded-lg border border-separator bg-surface px-4 transition focus-within:border-foreground/40"
+          role="search"
+        >
+          <SearchIcon className="size-5 shrink-0 text-muted" />
+          <label className="sr-only" htmlFor="home-search">
+            Search the catalog
+          </label>
+          <input
+            className="h-14 w-full bg-transparent text-base outline-none placeholder:text-muted"
+            id="home-search"
+            name="q"
+            placeholder="Search vinyl, shirts, tour merch…"
+            type="search"
+          />
+          <button
+            className="shrink-0 rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background transition hover:opacity-90"
+            type="submit"
           >
-            <p className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              {value}
-            </p>
-            <p className="mt-2 text-sm text-muted">{label}</p>
-          </Card>
-        ))}
-      </div>
-
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <p className="text-sm font-medium text-accent">Recently added</p>
-          <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
-            Latest merch additions
-          </h2>
+            Search
+          </button>
+        </form>
+        <div className="flex flex-wrap gap-2">
+          {allTypes.map((type) => (
+            <Link
+              className="rounded-full border border-separator px-3 py-1 text-sm text-muted transition hover:border-foreground/40 hover:text-foreground"
+              href={`/items?type=${encodeURIComponent(type)}`}
+              key={type}
+            >
+              {type}
+            </Link>
+          ))}
         </div>
-        <Link
-          className="hidden text-sm font-medium text-accent hover:underline sm:block"
-          href="/items"
-        >
-          View all<span aria-hidden="true">→</span>
-        </Link>
-      </div>
+      </section>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {latestItems.map((item) => (
-          <Link className="group" href={`/items/${item.id}`} key={item.id}>
-            <Card className="h-full overflow-hidden border border-separator bg-surface shadow-sm transition duration-300 group-hover:-translate-y-1 group-hover:shadow-lg">
-              <div className="relative aspect-[4/5] overflow-hidden bg-surface-secondary">
-                <Image
-                  alt={item.images[0].alt}
-                  className="object-contain p-4 transition duration-500 group-hover:scale-105"
-                  fill
-                  sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw"
-                  src={item.images[0].src}
-                />
-              </div>
-              <div className="p-4">
-                <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted">
-                  {item.type} · {item.era}
-                </p>
-                <h3 className="mt-2 font-semibold group-hover:text-accent">
-                  {item.name}
-                </h3>
-                <p className="mt-2 line-clamp-2 text-sm leading-5 text-muted">
-                  {item.description}
-                </p>
-              </div>
-            </Card>
-          </Link>
-        ))}
-      </div>
+      {/* Eras */}
+      <section className="flex flex-col gap-6" id="eras">
+        <SectionHeading
+          eyebrow={`${eras.length} eras`}
+          title="Browse by era"
+        />
+        <ol className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {eras.map((era) => {
+            const count = itemsInEra(era.slug).length;
+            const cover = eraCover(era);
 
-      <div className="flex justify-center pt-2">
-        <Link
-          className="text-sm font-medium text-accent hover:underline"
-          href="/items"
-        >
-          Browse all releases <span aria-hidden="true">→</span>
-        </Link>
-      </div>
-    </section>
+            return (
+              <li key={era.slug}>
+                <Link
+                  className="group relative flex aspect-[16/9] flex-col sm:aspect-[4/5] justify-end overflow-hidden rounded-lg p-5 ring-1 ring-separator"
+                  href={`/eras/${era.slug}`}
+                  style={{ backgroundColor: era.color }}
+                >
+                  {cover && (
+                    <Image
+                      alt=""
+                      className="object-cover opacity-40 mix-blend-luminosity transition duration-700 group-hover:scale-105 group-hover:opacity-60 motion-reduce:transition-none"
+                      fill
+                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                      src={cover}
+                    />
+                  )}
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background: `linear-gradient(to top, ${era.color} 10%, transparent 70%)`,
+                    }}
+                  />
+                  <div className="relative flex flex-col gap-1 text-black">
+                    <span className="label-caps opacity-70">{era.year}</span>
+                    <span className="font-display text-4xl leading-none">
+                      {era.name}
+                    </span>
+                    <span className="mt-2 text-sm opacity-70">
+                      {count} {count === 1 ? "item" : "items"}{" "}
+                      <span
+                        aria-hidden="true"
+                        className="inline-block transition group-hover:translate-x-1"
+                      >
+                        →
+                      </span>
+                    </span>
+                  </div>
+                </Link>
+              </li>
+            );
+          })}
+        </ol>
+      </section>
+
+      {/* Recently added */}
+      <section className="flex flex-col gap-6">
+        <SectionHeading
+          action={{ href: "/items?sort=added", label: "View full catalog" }}
+          eyebrow="Recently added"
+          title="New in the archive"
+        />
+        <ItemGrid items={recent} />
+      </section>
+    </div>
   );
 }
