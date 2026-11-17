@@ -1,7 +1,5 @@
-import { buttonVariants } from "@heroui/styles";
 import type { Metadata } from "next";
 
-import { EraDot } from "@/components/eras/era-badge";
 import { EraTimelineItem } from "@/components/eras/era-timeline-item";
 import { PageHeader } from "@/components/ui/page-header";
 import { currentEra, eras, items } from "@/lib/catalog/data";

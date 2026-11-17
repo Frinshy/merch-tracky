@@ -20,11 +20,6 @@ export function EraTimelineItem({ era, isCurrent }: { era: Era; isCurrent: boole
     >
       <div className="flex items-center gap-3 md:flex-col md:items-start">
         <span className="type-display text-5xl leading-none md:text-6xl">{era.year}</span>
-        <span
-          aria-hidden="true"
-          className="h-2 w-10 rounded-full"
-          style={{ backgroundColor: era.color }}
-        />
         {isCurrent && (
           <Chip className="label-caps rounded-sm bg-foreground text-background" size="sm">
             Current era
