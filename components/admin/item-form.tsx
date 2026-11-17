@@ -330,7 +330,7 @@ export function ItemForm({
         />
       </Section>
 
-      <Surface className="sticky bottom-4 z-10 flex items-center justify-end gap-2 rounded-2xl p-3 shadow-lg">
+      <Surface className="sticky bottom-4 z-10 flex items-center justify-end gap-2 rounded-sm p-3 shadow-lg">
         <ButtonLink href="/dev" variant="ghost">
           Cancel
         </ButtonLink>
@@ -346,7 +346,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   return (
     <Card className="w-full p-5" variant="secondary">
       <Fieldset className="flex w-full flex-col gap-4">
-        <Fieldset.Legend className="mb-1 font-display text-2xl">{title}</Fieldset.Legend>
+        <Fieldset.Legend className="mb-1 type-display text-2xl">{title}</Fieldset.Legend>
         {children}
       </Fieldset>
     </Card>

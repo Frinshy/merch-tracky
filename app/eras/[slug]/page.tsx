@@ -1,17 +1,14 @@
-import { linkVariants } from "@heroui/styles";
-import clsx from "clsx";
-import { ArrowLeftIcon } from "lucide-react";
 import type { Metadata } from "next";
-import NextLink from "next/link";
 import { notFound } from "next/navigation";
 
-import { EraArtwork, eraGradient } from "@/components/eras/era-artwork";
+import { EraArtwork } from "@/components/eras/era-artwork";
 import { ItemGrid } from "@/components/items/item-grid";
 import { ButtonLink } from "@/components/ui/button-link";
 import { EmptyMessage } from "@/components/ui/empty-message";
 import { PrevNextNav } from "@/components/ui/prev-next-nav";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Stat } from "@/components/ui/stat";
+import { TextLink } from "@/components/ui/text-link";
 import { eraStats, eras, getEra, itemsInEra, neighbours, sortTypes } from "@/lib/catalog/data";
 import { pluralize } from "@/lib/catalog/format";
 
@@ -52,32 +49,32 @@ export default async function EraPage({ params }: Props) {
   );
 
   return (
-    <div className="flex flex-col gap-14 pt-8">
+    <div className="flex flex-col gap-16 pt-8">
       <header
-        className="-mx-4 grid items-end gap-8 overflow-hidden px-4 pb-10 pt-8 text-black sm:-mx-6 sm:rounded-xl sm:px-10 md:grid-cols-[minmax(0,1fr)_auto]"
-        style={{ background: eraGradient(era.color, 135, 55) }}
+        className="halftone -mx-4 grid items-end gap-8 overflow-hidden px-4 pb-10 pt-8 text-black sm:-mx-6 sm:rounded-sm sm:px-10 md:grid-cols-[minmax(0,1fr)_auto]"
+        style={{ backgroundColor: era.color }}
       >
         <div>
-          <NextLink
-            className={clsx(
-              linkVariants().base(),
-              "gap-1.5 font-normal text-black/70 hover:text-black",
-            )}
+          {/* `!` overrides TextLink's muted colour: the header is printed in black on the era ink. */}
+          <TextLink
+            arrow="back"
+            className="label-caps text-black/70! hover:text-black!"
             href="/eras"
           >
-            <ArrowLeftIcon size={14} />
             All eras
-          </NextLink>
-          <h1 className="mt-6 font-display text-6xl leading-none sm:text-8xl">{era.name}</h1>
-          {era.description && <p className="mt-4 max-w-xl text-black/75">{era.description}</p>}
-          <dl className="mt-8 flex gap-8">
+          </TextLink>
+          <h1 className="type-display mt-6 text-balance text-7xl leading-[0.85] sm:text-9xl">
+            {era.name}
+          </h1>
+          {era.description && <p className="mt-5 max-w-xl text-black/80">{era.description}</p>}
+          <dl className="mt-8 flex gap-8 [&_dt]:text-black/70">
             <Stat label="Items" value={eraItems.length} />
             <Stat label="Formats" value={types.length} />
             <Stat label="Year" value={era.year} />
           </dl>
         </div>
         {(era.cover || photos.length > 0) && (
-          <div className="relative aspect-square w-full max-w-xs overflow-hidden rounded-xl bg-black/10 shadow-2xl ring-1 ring-black/20 md:w-72">
+          <div className="relative aspect-square w-full max-w-xs md:w-72">
             <EraArtwork preload era={era} photos={photos} sizes="(min-width: 768px) 18rem, 100vw" />
           </div>
         )}
@@ -105,7 +102,7 @@ export default async function EraPage({ params }: Props) {
                 href: `/items?era=${era.slug}&type=${encodeURIComponent(type)}`,
                 label: "Open in catalog",
               }}
-              eyebrow={pluralize(ofType.length, "item")}
+              count={pluralize(ofType.length, "item")}
               title={type}
             />
             <ItemGrid items={ofType} showEra={false} />
@@ -113,7 +110,7 @@ export default async function EraPage({ params }: Props) {
         );
       })}
 
-      <div className="border-t border-separator pt-6">
+      <div className="border-t-2 border-foreground pt-6">
         <PrevNextNav
           large
           label="Other eras"

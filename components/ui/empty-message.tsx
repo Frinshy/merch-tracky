@@ -12,7 +12,7 @@ export function EmptyMessage({
 }) {
   return (
     <EmptyState className="flex flex-col items-center gap-2 py-20 text-center">
-      <p className="font-display text-3xl text-foreground">{title}</p>
+      <p className="type-display text-3xl text-foreground">{title}</p>
       {description && <p>{description}</p>}
       {action && <div className="mt-3">{action}</div>}
     </EmptyState>

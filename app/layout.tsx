@@ -6,7 +6,7 @@ import type { Metadata, Viewport } from "next";
 import { DevToolbar } from "@/components/layout/dev-toolbar";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
-import { fontDisplay, fontMono, fontSans } from "@/config/fonts";
+import { fontSans } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
 
 import { Providers } from "./providers";
@@ -14,8 +14,8 @@ import { Providers } from "./providers";
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} — ${siteConfig.tagline}`,
-    template: `%s · ${siteConfig.name}`,
+    default: siteConfig.tagline,
+    template: `%s · ${siteConfig.tagline}`,
   },
   description: siteConfig.description,
   icons: { icon: "/favicon.ico" },
@@ -24,8 +24,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
+    // Hex equivalents of --background in globals.css.
+    { media: "(prefers-color-scheme: light)", color: "#e8e9eb" },
+    { media: "(prefers-color-scheme: dark)", color: "#131415" },
   ],
 };
 
@@ -36,8 +37,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={clsx(
           "min-h-screen bg-background font-sans text-foreground antialiased",
           fontSans.variable,
-          fontMono.variable,
-          fontDisplay.variable,
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>

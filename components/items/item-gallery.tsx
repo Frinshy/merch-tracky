@@ -22,7 +22,7 @@ export function ItemGallery({ images, name }: { images: MerchImage[]; name: stri
       {/* Arrow keys switch photos while the main image is focused. */}
       <div
         aria-roledescription={hasMany ? "carousel" : undefined}
-        className="group relative aspect-square overflow-hidden rounded-xl bg-surface-secondary ring-1 ring-separator focus-visible:outline-2 focus-visible:outline-focus"
+        className="group relative aspect-square overflow-hidden rounded-sm bg-surface ring-1 ring-separator focus-outline"
         tabIndex={hasMany ? 0 : -1}
         onKeyDown={(e) => {
           if (e.key === "ArrowLeft") go(-1);
@@ -41,7 +41,7 @@ export function ItemGallery({ images, name }: { images: MerchImage[]; name: stri
           <>
             <GalleryArrow direction="previous" onPress={() => go(-1)} />
             <GalleryArrow direction="next" onPress={() => go(1)} />
-            <span className="label-caps absolute bottom-3 right-3 rounded-md bg-background/80 px-1.5 py-0.5 backdrop-blur">
+            <span className="label-caps absolute bottom-3 right-3 rounded-sm bg-background/80 px-1.5 py-0.5 backdrop-blur">
               {active + 1} / {list.length}
             </span>
           </>
@@ -58,7 +58,7 @@ export function ItemGallery({ images, name }: { images: MerchImage[]; name: stri
               aria-current={active === index}
               aria-label={`Show photo ${index + 1}`}
               className={clsx(
-                "relative size-16 shrink-0 overflow-hidden rounded-lg bg-surface-secondary ring-1 transition sm:size-20",
+                "relative size-16 shrink-0 overflow-hidden rounded-sm bg-surface ring-1 transition sm:size-20",
                 active === index
                   ? "ring-2 ring-foreground"
                   : "opacity-60 ring-separator hover:opacity-100",
@@ -87,7 +87,7 @@ function GalleryArrow({
       isIconOnly
       aria-label={`${direction === "previous" ? "Previous" : "Next"} photo`}
       className={clsx(
-        "absolute top-1/2 -translate-y-1/2 rounded-full bg-background/80 shadow backdrop-blur transition sm:opacity-0 sm:group-hover:opacity-100 sm:data-[focus-visible=true]:opacity-100",
+        "absolute top-1/2 -translate-y-1/2 rounded-sm bg-background/80 shadow backdrop-blur transition sm:opacity-0 sm:group-hover:opacity-100 sm:data-[focus-visible=true]:opacity-100",
         direction === "previous" ? "left-3" : "right-3",
       )}
       variant="tertiary"

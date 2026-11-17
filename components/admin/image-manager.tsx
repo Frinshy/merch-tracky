@@ -47,7 +47,7 @@ export function ImageManager({
     <div className="flex flex-col gap-3">
       <div
         className={clsx(
-          "flex flex-col items-center gap-2 rounded-2xl border border-dashed px-4 py-8 text-center text-sm transition-colors",
+          "flex flex-col items-center gap-2 rounded-sm border border-dashed px-4 py-8 text-center text-sm transition-colors",
           isDragging ? "border-accent bg-accent/5" : "border-separator",
         )}
         onDragLeave={() => setIsDragging(false)}
@@ -86,7 +86,7 @@ export function ImageManager({
           {rows.map((row, index) => (
             <li key={row.key}>
               <Card className="flex-row gap-3 p-3" variant="tertiary">
-                <div className="relative size-24 shrink-0 overflow-hidden rounded-lg bg-surface-secondary">
+                <div className="relative size-24 shrink-0 overflow-hidden rounded-sm bg-surface-secondary">
                   {/* Plain <img>: blob: previews can't go through next/image. */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img alt="" className="size-full object-contain" src={previewOf(row)} />

@@ -12,7 +12,7 @@ import { EmptyMessage } from "@/components/ui/empty-message";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { deleteItem } from "@/lib/admin/client";
 import { newestFirst } from "@/lib/catalog/data";
-import { pluralize } from "@/lib/catalog/format";
+import { formatDate, pluralize } from "@/lib/catalog/format";
 import type { Era, MerchItem } from "@/lib/catalog/types";
 
 import { ConfirmDialog } from "./confirm-dialog";
@@ -70,7 +70,7 @@ export function ItemTable({ items, eras }: { items: MerchItem[]; eras: Era[] }) 
                 <Table.Row key={item.id} id={item.id}>
                   <Table.Cell>
                     <div className="flex items-center gap-3">
-                      <div className="size-12 shrink-0 overflow-hidden rounded-lg bg-surface-secondary">
+                      <div className="size-12 shrink-0 overflow-hidden rounded-sm bg-surface-secondary">
                         {item.images[0] && (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
@@ -94,7 +94,9 @@ export function ItemTable({ items, eras }: { items: MerchItem[]; eras: Era[] }) 
                     </div>
                   </Table.Cell>
                   <Table.Cell>{eraName(item.era)}</Table.Cell>
-                  <Table.Cell className="tabular-nums text-muted">{item.addedAt}</Table.Cell>
+                  <Table.Cell className="tabular-nums text-muted">
+                    {formatDate(item.addedAt)}
+                  </Table.Cell>
                   <Table.Cell>
                     <div className="flex justify-end gap-1">
                       <ButtonLink href={`/dev/items/${item.id}`} size="sm" variant="secondary">

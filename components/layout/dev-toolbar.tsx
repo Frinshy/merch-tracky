@@ -15,7 +15,7 @@ export function DevToolbar() {
   const itemId = pathname.match(/^\/items\/([^/]+)$/)?.[1];
 
   return (
-    <Surface className="fixed bottom-4 right-4 z-50 flex items-center gap-1 rounded-2xl p-1 shadow-lg ring-1 ring-warning/40">
+    <Surface className="fixed bottom-4 right-4 z-50 flex items-center gap-1 rounded-sm p-1 shadow-lg ring-1 ring-warning/40">
       <span className="label-caps px-2 text-warning">Dev</span>
       <ButtonLink href="/dev" size="sm" variant="ghost">
         Admin

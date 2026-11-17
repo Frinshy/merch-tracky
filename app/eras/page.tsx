@@ -16,10 +16,10 @@ export default function ErasPage() {
   const timeline = [...eras].reverse();
 
   return (
-    <div className="flex flex-col gap-12 pt-8">
+    <div className="flex flex-col gap-16 pt-8">
       <PageHeader
         description="The archive is organised by era: each album cycle with its tours, singles and merch drops. Pick one to see everything from that time."
-        eyebrow={`${eras.length} eras · ${items.length} items`}
+        eyebrow={`${eras.length} eras, ${items.length} items`}
         title="Eras"
       />
 
@@ -33,7 +33,7 @@ export default function ErasPage() {
             className={buttonVariants({
               size: "sm",
               variant: "tertiary",
-              className: "shrink-0 rounded-full",
+              className: "shrink-0",
             })}
             href={`#${era.slug}`}
           >

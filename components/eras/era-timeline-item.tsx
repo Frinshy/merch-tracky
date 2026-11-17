@@ -5,8 +5,7 @@ import { Stat } from "@/components/ui/stat";
 import { eraStats } from "@/lib/catalog/data";
 import type { Era } from "@/lib/catalog/types";
 
-import { EraArtwork, eraGradient } from "./era-artwork";
-import { EraDot } from "./era-badge";
+import { EraArtwork } from "./era-artwork";
 import { EraButtonLink } from "./era-button-link";
 
 /** One era on the /eras timeline: year, text + stats, and artwork. */
@@ -16,24 +15,26 @@ export function EraTimelineItem({ era, isCurrent }: { era: Era; isCurrent: boole
 
   return (
     <li
-      className="grid scroll-mt-20 gap-6 border-t border-separator py-10 md:grid-cols-[7rem_minmax(0,1fr)_minmax(0,1.1fr)] md:gap-10"
+      className="grid scroll-mt-20 gap-6 border-t-2 border-foreground py-10 md:grid-cols-[8rem_minmax(0,1fr)_minmax(0,1.1fr)] md:gap-10"
       id={era.slug}
     >
       <div className="flex items-center gap-3 md:flex-col md:items-start">
-        <EraDot className="size-3 ring-4 ring-background" color={era.color} />
-        <span className="font-display text-4xl leading-none text-muted md:text-5xl">
-          {era.year}
-        </span>
+        <span className="type-display text-5xl leading-none md:text-6xl">{era.year}</span>
+        <span
+          aria-hidden="true"
+          className="h-2 w-10 rounded-full"
+          style={{ backgroundColor: era.color }}
+        />
         {isCurrent && (
-          <Chip color="accent" size="sm" variant="primary">
-            Current
+          <Chip className="label-caps rounded-sm bg-foreground text-background" size="sm">
+            Current era
           </Chip>
         )}
       </div>
 
       <div className="flex flex-col gap-4">
-        <h2 className="font-display text-5xl leading-[0.95] sm:text-6xl">
-          <NextLink className="hover:underline" href={href}>
+        <h2 className="type-display text-5xl leading-[0.85] sm:text-6xl">
+          <NextLink className="focus-outline hover:underline" href={href}>
             {era.name}
           </NextLink>
         </h2>
@@ -45,15 +46,15 @@ export function EraTimelineItem({ era, isCurrent }: { era: Era; isCurrent: boole
           ))}
         </dl>
         <EraButtonLink className="mt-2 w-fit" color={era.color} href={href}>
-          Explore {era.name}
+          Open {era.name}
         </EraButtonLink>
       </div>
 
       <NextLink
-        aria-label={`Explore ${era.name}`}
-        className="group relative block aspect-[16/10] overflow-hidden rounded-xl ring-1 ring-separator"
+        aria-label={`Open ${era.name}`}
+        className="halftone focus-outline group relative block aspect-[16/10] overflow-hidden rounded-sm"
         href={href}
-        style={{ background: eraGradient(era.color) }}
+        style={{ backgroundColor: era.color }}
       >
         <EraArtwork
           era={era}

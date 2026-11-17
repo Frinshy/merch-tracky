@@ -1,4 +1,4 @@
-import { Breadcrumbs, Chip } from "@heroui/react";
+import { Chip } from "@heroui/react";
 import type { Metadata } from "next";
 import NextLink from "next/link";
 import { notFound } from "next/navigation";
@@ -6,8 +6,10 @@ import { notFound } from "next/navigation";
 import { ItemDetails } from "@/components/items/item-details";
 import { ItemGallery } from "@/components/items/item-gallery";
 import { ItemRail } from "@/components/items/item-rail";
+import { LimitedSticker } from "@/components/items/limited-sticker";
 import { PrevNextNav } from "@/components/ui/prev-next-nav";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { TextLink } from "@/components/ui/text-link";
 import { coverOf, getEra, getItem, items, itemsInEra, neighbours } from "@/lib/catalog/data";
 
 type Props = { params: Promise<{ id: string }> };
@@ -47,25 +49,29 @@ export default async function ItemPage({ params }: Props) {
   const related = eraItems.filter((i) => i.id !== item.id).slice(0, RELATED_COUNT);
 
   return (
-    <div className="flex flex-col gap-20 pt-8">
+    <div className="flex flex-col gap-16 pt-8">
       <div className="flex flex-col gap-6">
-        <Breadcrumbs>
-          <Breadcrumbs.Item href="/items">Catalog</Breadcrumbs.Item>
-          {era && <Breadcrumbs.Item href={`/eras/${era.slug}`}>{era.name}</Breadcrumbs.Item>}
-          <Breadcrumbs.Item>{item.name}</Breadcrumbs.Item>
-        </Breadcrumbs>
+        <TextLink
+          arrow="back"
+          className="label-caps self-start"
+          href={era ? `/eras/${era.slug}` : "/items"}
+        >
+          {era?.name ?? "Catalog"}
+        </TextLink>
 
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
-          <ItemGallery images={item.images} name={item.name} />
+          <div className="relative min-w-0">
+            <ItemGallery images={item.images} name={item.name} />
+            {item.limited && (
+              <LimitedSticker className="absolute -right-3 -top-3 size-20 text-sm" />
+            )}
+          </div>
 
           <div className="flex min-w-0 flex-col gap-8 lg:sticky lg:top-24 lg:self-start">
             <div className="flex flex-col gap-4">
-              {item.limited && (
-                <Chip className="w-fit" color="accent" size="sm" variant="primary">
-                  Limited
-                </Chip>
-              )}
-              <h1 className="font-display text-5xl leading-[0.95] sm:text-6xl">{item.name}</h1>
+              <h1 className="type-display text-balance text-6xl leading-[0.85] sm:text-7xl">
+                {item.name}
+              </h1>
               {item.description && (
                 <p className="max-w-prose leading-7 text-muted">{item.description}</p>
               )}
@@ -77,8 +83,15 @@ export default async function ItemPage({ params }: Props) {
               <ul aria-label="Tags" className="flex flex-wrap gap-2">
                 {item.tags.map((tag) => (
                   <li key={tag}>
-                    <NextLink href={`/items?q=${encodeURIComponent(tag)}`}>
-                      <Chip className="hover:opacity-80" size="sm" variant="secondary">
+                    <NextLink
+                      className="focus-outline block rounded-sm"
+                      href={`/items?q=${encodeURIComponent(tag)}`}
+                    >
+                      <Chip
+                        className="label-caps rounded-sm hover:opacity-80"
+                        size="sm"
+                        variant="secondary"
+                      >
                         #{tag}
                       </Chip>
                     </NextLink>
@@ -100,7 +113,6 @@ export default async function ItemPage({ params }: Props) {
         <section className="flex flex-col gap-6">
           <SectionHeading
             action={{ href: `/eras/${era.slug}`, label: `All ${era.name} items` }}
-            eyebrow="Same era"
             title={`More from ${era.name}`}
           />
           <ItemRail items={related} label={`More from ${era.name}`} showEra={false} />

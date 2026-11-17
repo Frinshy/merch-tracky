@@ -22,7 +22,7 @@ export function PrevNextNav({
   large?: boolean;
 }) {
   if (!prev && !next) return null;
-  const title = large ? "font-display text-2xl text-foreground" : "line-clamp-1 text-foreground";
+  const title = large ? "type-display text-2xl text-foreground" : "line-clamp-1 text-foreground";
   const link = clsx(
     linkVariants().base(),
     "flex w-full flex-col gap-0.5 font-normal text-muted hover:text-foreground",
