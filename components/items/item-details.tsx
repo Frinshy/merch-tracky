@@ -1,7 +1,6 @@
 import { Card } from "@heroui/react";
 
 import { EraBadge } from "@/components/eras/era-badge";
-import { ARTIST, getEra } from "@/lib/catalog/data";
 import { formatDate } from "@/lib/catalog/format";
 import type { MerchItem } from "@/lib/catalog/types";
 
@@ -16,7 +15,6 @@ export function ItemDetails({ item }: { item: MerchItem }) {
     ["Region", item.region],
     ["Added", formatDate(item.addedAt)],
   ];
-  const eraColor = getEra(item.era)?.color;
 
   return (
     <Card className="w-full gap-4 rounded-sm p-4 ring-1 ring-separator">
