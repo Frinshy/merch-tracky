@@ -7,7 +7,6 @@ import { ItemGallery } from "@/components/item-gallery";
 import { ItemGrid } from "@/components/item-card";
 import { SectionHeading } from "@/components/section-heading";
 import {
-  catalogNumber,
   coverOf,
   formatDate,
   getEra,
@@ -78,7 +77,7 @@ export default async function ItemPage({ params }: Props) {
             <span>{item.era}</span>
           )}
           <span aria-hidden="true">/</span>
-          <span className="text-foreground">No. {catalogNumber(item.id)}</span>
+          <span className="line-clamp-1 text-foreground">{item.name}</span>
         </nav>
 
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">

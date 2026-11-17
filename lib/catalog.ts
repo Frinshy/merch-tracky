@@ -124,17 +124,6 @@ export function newestFirst(list: MerchItem[]): MerchItem[] {
   return [...list].sort((a, b) => b.addedAt.localeCompare(a.addedAt));
 }
 
-/** Stable catalogue number based on the order items were added. */
-const catalogNumbers = new Map(
-  [...items]
-    .sort((a, b) => a.addedAt.localeCompare(b.addedAt))
-    .map((item, index) => [item.id, index + 1]),
-);
-
-export function catalogNumber(id: string): string {
-  return String(catalogNumbers.get(id) ?? 0).padStart(3, "0");
-}
-
 const MONTHS = [
   "Jan",
   "Feb",

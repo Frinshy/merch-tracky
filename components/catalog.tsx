@@ -12,7 +12,6 @@ import { EraBadge } from "@/components/era-badge";
 import {
   allSources,
   allTypes,
-  catalogNumber,
   coverOf,
   eras,
   formatDate,
@@ -312,9 +311,6 @@ function ItemList({ items }: { items: MerchItem[] }) {
 
         return (
           <li className="group relative flex items-center gap-4 py-3" key={item.id}>
-            <span className="label-caps hidden w-10 text-muted sm:block">
-              {catalogNumber(item.id)}
-            </span>
             <div className="relative size-14 shrink-0 overflow-hidden rounded bg-surface-secondary">
               <Image
                 alt=""
