@@ -13,8 +13,7 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  const isActive = (href: string) =>
-    href === "/items" ? pathname.startsWith("/items") : false;
+  const isActive = (href: string) => pathname.startsWith(href);
 
   return (
     <nav className="fixed top-0 z-40 w-full border-b border-separator bg-background/80 backdrop-blur-lg">

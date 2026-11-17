@@ -4,7 +4,8 @@ An unofficial public archive of Louis Tomlinson merchandise, browsable by era, f
 
 ## Features
 
-- **Eras first.** The home page and `/eras/<slug>` pages group every item by album era, each with its own colour.
+- **Home** shows recently added items, a spotlight on the current era and a quick index by era and format.
+- **Eras** (`/eras`) is a timeline of every era. Each era page (`/eras/<slug>`) groups its items by format and uses the era's colour.
 - **Catalog** (`/items`) with instant search, multi-select era/format/source filters, sorting and a grid or list view. Filters are kept in the URL, so filtered views can be shared.
 - **Item pages** with a photo gallery (with photo credits), release details, previous/next navigation and more items from the same era.
 - Light and dark themes.

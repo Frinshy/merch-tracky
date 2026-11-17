@@ -38,17 +38,20 @@ export function ItemCard({
         )}
       </div>
       <div className="mt-3 flex flex-col gap-1">
-        <h3 className="font-medium leading-snug">
-          <Link
-            className="after:absolute after:inset-0 after:content-['']"
-            href={`/items/${item.id}`}
-          >
-            {item.name}
-          </Link>
-        </h3>
+        <div className="flex items-baseline justify-between gap-2">
+          <h3 className="font-medium leading-snug">
+            <Link
+              className="after:absolute after:inset-0 after:content-['']"
+              href={`/items/${item.id}`}
+            >
+              {item.name}
+            </Link>
+          </h3>
+          <span className="label-caps shrink-0 text-muted/70">
+            #{catalogNumber(item.id)}
+          </span>
+        </div>
         <p className="label-caps flex flex-wrap items-center gap-x-2 gap-y-1 text-muted">
-          <span className="text-foreground/60">#{catalogNumber(item.id)}</span>
-          <span aria-hidden="true">·</span>
           <span>{item.type}</span>
           {showEra && (
             <>

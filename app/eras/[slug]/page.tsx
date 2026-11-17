@@ -43,7 +43,7 @@ export default async function EraPage({ params }: Props) {
         }}
       >
         <nav aria-label="Breadcrumb" className="label-caps text-black/60">
-          <Link className="hover:text-black" href="/#eras">
+          <Link className="hover:text-black" href="/eras">
             Eras
           </Link>{" "}
           / {era.year}

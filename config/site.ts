@@ -5,7 +5,7 @@ export const siteConfig = {
   description:
     "An unofficial fan archive of Louis Tomlinson merchandise — every release, from every era.",
   navItems: [
-    { label: "Eras", href: "/#eras" },
+    { label: "Eras", href: "/eras" },
     { label: "Catalog", href: "/items" },
   ],
   links: {

@@ -87,6 +87,20 @@ export function eraCover(era: Era): string | undefined {
   return era.cover ?? itemsInEra(era.slug).find((i) => i.images[0])?.images[0].src;
 }
 
+/** Item count, per-format counts and a few distinct cover images for an era. */
+export function eraStats(slug: string) {
+  const list = newestFirst(itemsInEra(slug));
+  const formats = sortTypes(list.map((i) => i.type)).map((type) => ({
+    type,
+    count: list.filter((i) => i.type === type).length,
+  }));
+  const covers = Array.from(
+    new Set(list.map((i) => i.images[0]?.src).filter(Boolean) as string[]),
+  ).slice(0, 4);
+
+  return { count: list.length, formats, covers };
+}
+
 export function sortTypes(types: Iterable<string>): string[] {
   return Array.from(new Set(types)).sort((a, b) => {
     const ia = TYPE_ORDER.indexOf(a);
