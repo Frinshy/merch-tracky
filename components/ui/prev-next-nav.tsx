@@ -1,4 +1,8 @@
+import { linkVariants } from "@heroui/styles";
+import clsx from "clsx";
 import NextLink from "next/link";
+
+import { ArrowLeftIcon, ArrowRightIcon } from "./icons";
 
 type Target = { href: string; label: string };
 
@@ -20,20 +24,30 @@ export function PrevNextNav({
 }) {
   if (!prev && !next) return null;
   const title = large ? "font-display text-2xl text-foreground" : "line-clamp-1 text-foreground";
+  const link = clsx(
+    linkVariants().base(),
+    "flex w-full flex-col gap-0.5 font-normal text-muted hover:text-foreground",
+  );
 
   return (
     <nav aria-label={label} className="grid grid-cols-2 gap-4 text-sm">
       {prev ? (
-        <NextLink className="text-muted hover:text-foreground" href={prev.href}>
-          <span className="label-caps block">← {prevCaption}</span>
+        <NextLink className={clsx(link, "items-start")} href={prev.href}>
+          <span className="label-caps inline-flex items-center gap-1.5">
+            <ArrowLeftIcon size={12} />
+            {prevCaption}
+          </span>
           <span className={title}>{prev.label}</span>
         </NextLink>
       ) : (
         <span />
       )}
       {next && (
-        <NextLink className="text-right text-muted hover:text-foreground" href={next.href}>
-          <span className="label-caps block">{nextCaption} →</span>
+        <NextLink className={clsx(link, "items-end text-right")} href={next.href}>
+          <span className="label-caps inline-flex items-center gap-1.5">
+            {nextCaption}
+            <ArrowRightIcon size={12} />
+          </span>
           <span className={title}>{next.label}</span>
         </NextLink>
       )}

@@ -1,3 +1,6 @@
+import { linkVariants } from "@heroui/styles";
+import clsx from "clsx";
+
 import { siteConfig } from "@/config/site";
 import { ARTIST, items } from "@/lib/catalog/data";
 import { pluralize } from "@/lib/catalog/format";
@@ -13,7 +16,7 @@ export function Footer() {
         <div className="flex items-center gap-5">
           <span className="label-caps">{pluralize(items.length, "item")} archived</span>
           <a
-            className="hover:text-foreground"
+            className={clsx(linkVariants().base(), "font-normal text-muted hover:text-foreground")}
             href={siteConfig.links.github}
             rel="noopener noreferrer"
             target="_blank"

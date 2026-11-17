@@ -1,11 +1,15 @@
 "use client";
 
 import { Button, SearchField, Table, toast } from "@heroui/react";
+import { linkVariants } from "@heroui/styles";
+import clsx from "clsx";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { ButtonLink } from "@/components/ui/button-link";
+import { EmptyMessage } from "@/components/ui/empty-message";
+import { SectionHeading } from "@/components/ui/section-heading";
 import { deleteItem } from "@/lib/admin/client";
 import { newestFirst } from "@/lib/catalog/data";
 import { pluralize } from "@/lib/catalog/format";
@@ -38,8 +42,7 @@ export function ItemTable({ items, eras }: { items: MerchItem[]; eras: Era[] }) 
 
   return (
     <section className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <h2 className="font-display text-3xl">Items ({items.length})</h2>
+      <SectionHeading eyebrow={pluralize(items.length, "item")} title="Items">
         <SearchField aria-label="Filter items" className="w-72" value={query} onChange={setQuery}>
           <SearchField.Group>
             <SearchField.SearchIcon />
@@ -47,7 +50,7 @@ export function ItemTable({ items, eras }: { items: MerchItem[]; eras: Era[] }) 
             <SearchField.ClearButton />
           </SearchField.Group>
         </SearchField>
-      </div>
+      </SectionHeading>
 
       <Table variant="secondary">
         <Table.ScrollContainer>
@@ -59,13 +62,15 @@ export function ItemTable({ items, eras }: { items: MerchItem[]; eras: Era[] }) 
               <Table.Column className="text-right">Actions</Table.Column>
             </Table.Header>
             <Table.Body
-              renderEmptyState={() => <p className="p-6 text-center text-muted">No items match.</p>}
+              renderEmptyState={() => (
+                <EmptyMessage description="Try a different filter." title="No items match" />
+              )}
             >
               {visible.map((item) => (
                 <Table.Row key={item.id} id={item.id}>
                   <Table.Cell>
                     <div className="flex items-center gap-3">
-                      <div className="size-12 shrink-0 overflow-hidden rounded-md bg-surface-secondary">
+                      <div className="size-12 shrink-0 overflow-hidden rounded-lg bg-surface-secondary">
                         {item.images[0] && (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
@@ -77,7 +82,7 @@ export function ItemTable({ items, eras }: { items: MerchItem[]; eras: Era[] }) 
                       </div>
                       <div className="min-w-0">
                         <NextLink
-                          className="font-medium hover:underline"
+                          className={clsx(linkVariants().base(), "text-foreground")}
                           href={`/items/${item.id}`}
                         >
                           {item.name}

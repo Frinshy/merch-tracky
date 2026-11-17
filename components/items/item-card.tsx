@@ -21,7 +21,7 @@ export function ItemCard({
 
   return (
     <article className="group relative flex flex-col">
-      <div className="relative aspect-square overflow-hidden rounded-lg bg-surface-secondary ring-1 ring-separator transition group-hover:ring-foreground/30">
+      <div className="relative aspect-square overflow-hidden rounded-xl bg-surface-secondary ring-1 ring-separator transition group-hover:ring-foreground/30">
         <Image
           fill
           alt={cover.alt || item.name}
@@ -40,7 +40,7 @@ export function ItemCard({
         <h3 className="font-medium leading-snug">
           {/* The ::after overlay makes the whole card clickable. */}
           <NextLink
-            className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none focus-visible:after:rounded-lg focus-visible:after:ring-2 focus-visible:after:ring-focus"
+            className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none focus-visible:after:rounded-xl focus-visible:after:ring-2 focus-visible:after:ring-focus"
             href={`/items/${item.id}`}
           >
             {item.name}

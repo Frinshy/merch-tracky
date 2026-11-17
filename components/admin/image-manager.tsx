@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Chip, Input } from "@heroui/react";
+import { Button, Card, Chip, Input } from "@heroui/react";
 import clsx from "clsx";
 import { useRef, useState } from "react";
 
@@ -48,7 +48,7 @@ export function ImageManager({
     <div className="flex flex-col gap-3">
       <div
         className={clsx(
-          "flex flex-col items-center gap-2 rounded-xl border border-dashed px-4 py-8 text-center text-sm transition-colors",
+          "flex flex-col items-center gap-2 rounded-2xl border border-dashed px-4 py-8 text-center text-sm transition-colors",
           isDragging ? "border-accent bg-accent/5" : "border-separator",
         )}
         onDragLeave={() => setIsDragging(false)}
@@ -85,63 +85,65 @@ export function ImageManager({
       {rows.length > 0 && (
         <ol className="flex flex-col gap-3">
           {rows.map((row, index) => (
-            <li key={row.key} className="flex gap-3 rounded-xl border border-separator p-3">
-              <div className="relative size-24 shrink-0 overflow-hidden rounded-lg bg-surface-secondary">
-                {/* Plain <img>: blob: previews can't go through next/image. */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img alt="" className="size-full object-contain" src={previewOf(row)} />
-                {index === 0 && (
-                  <Chip
-                    className="absolute left-1 top-1"
-                    color="accent"
+            <li key={row.key}>
+              <Card className="flex-row gap-3 p-3" variant="tertiary">
+                <div className="relative size-24 shrink-0 overflow-hidden rounded-lg bg-surface-secondary">
+                  {/* Plain <img>: blob: previews can't go through next/image. */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img alt="" className="size-full object-contain" src={previewOf(row)} />
+                  {index === 0 && (
+                    <Chip
+                      className="absolute left-1 top-1"
+                      color="accent"
+                      size="sm"
+                      variant="primary"
+                    >
+                      Cover
+                    </Chip>
+                  )}
+                </div>
+                <div className="flex min-w-0 flex-1 flex-col gap-2">
+                  <Input
+                    aria-label="Alt text"
+                    placeholder={`Alt text (defaults to “${altFallback || "item name"}”)`}
+                    value={row.alt}
+                    variant="secondary"
+                    onChange={(e) => update(row.key, { alt: e.target.value })}
+                  />
+                  <Input
+                    aria-label="Photo credit"
+                    placeholder="Photo credit"
+                    value={row.author}
+                    variant="secondary"
+                    onChange={(e) => update(row.key, { author: e.target.value })}
+                  />
+                </div>
+                <div className="flex shrink-0 flex-col items-end gap-1">
+                  <Button
+                    isIconOnly
+                    aria-label="Move up"
+                    isDisabled={index === 0}
                     size="sm"
-                    variant="primary"
+                    variant="ghost"
+                    onPress={() => move(index, index - 1)}
                   >
-                    Cover
-                  </Chip>
-                )}
-              </div>
-              <div className="flex min-w-0 flex-1 flex-col gap-2">
-                <Input
-                  aria-label="Alt text"
-                  placeholder={`Alt text (defaults to “${altFallback || "item name"}”)`}
-                  value={row.alt}
-                  variant="secondary"
-                  onChange={(e) => update(row.key, { alt: e.target.value })}
-                />
-                <Input
-                  aria-label="Photo credit"
-                  placeholder="Photo credit"
-                  value={row.author}
-                  variant="secondary"
-                  onChange={(e) => update(row.key, { author: e.target.value })}
-                />
-              </div>
-              <div className="flex shrink-0 flex-col items-end gap-1">
-                <Button
-                  isIconOnly
-                  aria-label="Move up"
-                  isDisabled={index === 0}
-                  size="sm"
-                  variant="ghost"
-                  onPress={() => move(index, index - 1)}
-                >
-                  <ArrowUpIcon size={16} />
-                </Button>
-                <Button
-                  isIconOnly
-                  aria-label="Move down"
-                  isDisabled={index === rows.length - 1}
-                  size="sm"
-                  variant="ghost"
-                  onPress={() => move(index, index + 1)}
-                >
-                  <ArrowDownIcon size={16} />
-                </Button>
-                <Button size="sm" variant="danger-soft" onPress={() => remove(row)}>
-                  Remove
-                </Button>
-              </div>
+                    <ArrowUpIcon size={16} />
+                  </Button>
+                  <Button
+                    isIconOnly
+                    aria-label="Move down"
+                    isDisabled={index === rows.length - 1}
+                    size="sm"
+                    variant="ghost"
+                    onPress={() => move(index, index + 1)}
+                  >
+                    <ArrowDownIcon size={16} />
+                  </Button>
+                  <Button size="sm" variant="danger-soft" onPress={() => remove(row)}>
+                    Remove
+                  </Button>
+                </div>
+              </Card>
             </li>
           ))}
         </ol>

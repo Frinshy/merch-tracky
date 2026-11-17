@@ -1,13 +1,13 @@
 import { Chip } from "@heroui/react";
 import NextLink from "next/link";
 
-import { ButtonLink } from "@/components/ui/button-link";
 import { Stat } from "@/components/ui/stat";
 import { eraStats } from "@/lib/catalog/data";
 import type { Era } from "@/lib/catalog/types";
 
 import { EraArtwork, eraGradient } from "./era-artwork";
 import { EraDot } from "./era-badge";
+import { EraButtonLink } from "./era-button-link";
 
 /** One era on the /eras timeline: year, text + stats, and artwork. */
 export function EraTimelineItem({ era, isCurrent }: { era: Era; isCurrent: boolean }) {
@@ -44,13 +44,9 @@ export function EraTimelineItem({ era, isCurrent }: { era: Era; isCurrent: boole
             <Stat key={type} label={type} value={count} />
           ))}
         </dl>
-        <ButtonLink
-          className="mt-2 w-fit text-black"
-          href={href}
-          style={{ backgroundColor: era.color }}
-        >
-          Explore {era.name} <span aria-hidden="true">→</span>
-        </ButtonLink>
+        <EraButtonLink className="mt-2 w-fit" color={era.color} href={href}>
+          Explore {era.name}
+        </EraButtonLink>
       </div>
 
       <NextLink

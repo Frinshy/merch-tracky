@@ -47,15 +47,18 @@ export function Navbar() {
           >
             <SearchIcon size={18} />
           </ButtonLink>
-          <a
+          <ButtonLink
+            isIconOnly
             aria-label="GitHub repository"
-            className="button button--ghost button--sm button--icon-only hidden sm:inline-flex"
+            className="hidden sm:inline-flex"
             href={siteConfig.links.github}
             rel="noopener noreferrer"
+            size="sm"
             target="_blank"
+            variant="ghost"
           >
             <GithubIcon size={18} />
-          </a>
+          </ButtonLink>
           <ThemeSwitch />
           <Button
             isIconOnly

@@ -1,7 +1,9 @@
+import { buttonVariants } from "@heroui/styles";
 import type { Metadata } from "next";
 
 import { EraDot } from "@/components/eras/era-badge";
 import { EraTimelineItem } from "@/components/eras/era-timeline-item";
+import { PageHeader } from "@/components/ui/page-header";
 import { currentEra, eras, items } from "@/lib/catalog/data";
 
 export const metadata: Metadata = {
@@ -15,16 +17,11 @@ export default function ErasPage() {
 
   return (
     <div className="flex flex-col gap-12 pt-8">
-      <header className="flex flex-col gap-3">
-        <p className="label-caps text-muted">
-          {eras.length} eras · {items.length} items
-        </p>
-        <h1 className="font-display text-6xl leading-none sm:text-7xl">Eras</h1>
-        <p className="max-w-xl text-muted">
-          The archive is organised by era: each album cycle with its tours, singles and merch drops.
-          Pick one to see everything from that time.
-        </p>
-      </header>
+      <PageHeader
+        description="The archive is organised by era: each album cycle with its tours, singles and merch drops. Pick one to see everything from that time."
+        eyebrow={`${eras.length} eras · ${items.length} items`}
+        title="Eras"
+      />
 
       <nav
         aria-label="Jump to era"
@@ -33,12 +30,16 @@ export default function ErasPage() {
         {timeline.map((era) => (
           <a
             key={era.slug}
-            className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full border border-separator px-3 text-sm text-muted transition-colors hover:border-foreground/40 hover:text-foreground"
+            className={buttonVariants({
+              size: "sm",
+              variant: "tertiary",
+              className: "shrink-0 rounded-full",
+            })}
             href={`#${era.slug}`}
           >
             <EraDot color={era.color} />
             {era.name}
-            <span className="label-caps opacity-60">{era.year}</span>
+            <span className="label-caps text-muted">{era.year}</span>
           </a>
         ))}
       </nav>

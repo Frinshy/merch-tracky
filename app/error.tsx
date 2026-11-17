@@ -4,6 +4,7 @@ import { Button } from "@heroui/react";
 import { useEffect } from "react";
 
 import { ButtonLink } from "@/components/ui/button-link";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function ErrorPage({
   error,
@@ -18,10 +19,13 @@ export default function ErrorPage({
   }, [error]);
 
   return (
-    <div className="flex flex-col items-start gap-4 py-24">
-      <p className="label-caps text-muted">Error</p>
-      <h1 className="font-display text-5xl">Something went wrong.</h1>
-      <div className="flex gap-3">
+    <div className="flex flex-col items-start gap-6 py-24">
+      <PageHeader
+        description="The page failed to load. Try again, or head back home."
+        eyebrow="Error"
+        title="Something went wrong."
+      />
+      <div className="flex gap-2">
         <Button onPress={reset}>Try again</Button>
         <ButtonLink href="/" variant="secondary">
           Go home

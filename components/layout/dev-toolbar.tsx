@@ -1,8 +1,10 @@
 "use client";
 
+import { Surface } from "@heroui/react";
 import { usePathname } from "next/navigation";
 
 import { ButtonLink } from "@/components/ui/button-link";
+import { PlusIcon } from "@/components/ui/icons";
 
 /** Floating shortcut to the admin tools. Only mounted by the root layout under `next dev`. */
 export function DevToolbar() {
@@ -13,7 +15,7 @@ export function DevToolbar() {
   const itemId = pathname.match(/^\/items\/([^/]+)$/)?.[1];
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex items-center gap-1 rounded-xl border border-warning/40 bg-background/90 p-1 shadow-lg backdrop-blur">
+    <Surface className="fixed bottom-4 right-4 z-50 flex items-center gap-1 rounded-2xl p-1 shadow-lg ring-1 ring-warning/40">
       <span className="label-caps px-2 text-warning">Dev</span>
       <ButtonLink href="/dev" size="sm" variant="ghost">
         Admin
@@ -24,8 +26,9 @@ export function DevToolbar() {
         </ButtonLink>
       )}
       <ButtonLink href="/dev/items/new" size="sm">
-        + Add
+        <PlusIcon size={16} />
+        Add
       </ButtonLink>
-    </div>
+    </Surface>
   );
 }

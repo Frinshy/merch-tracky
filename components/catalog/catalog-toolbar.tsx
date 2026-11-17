@@ -43,7 +43,6 @@ export function CatalogToolbar({
           autoFocus={autoFocus}
           className="flex-1"
           value={filters.query}
-          variant="secondary"
           onChange={(query) => onChange({ query })}
         >
           <SearchField.Group>
@@ -57,7 +56,6 @@ export function CatalogToolbar({
           aria-label="Sort by"
           className="w-44 shrink-0"
           value={filters.sort}
-          variant="secondary"
           onChange={(key) => key && onChange({ sort: key as SortKey })}
         >
           <Select.Trigger>

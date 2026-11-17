@@ -2,6 +2,8 @@ import NextLink from "next/link";
 
 import { pluralize } from "@/lib/catalog/format";
 
+import { ArrowRightIcon } from "./icons";
+
 export type IndexEntry = {
   href: string;
   label: React.ReactNode;
@@ -29,12 +31,10 @@ export function IndexList({ entries }: { entries: IndexEntry[] }) {
             <span className="label-caps w-16 text-right text-muted">
               {pluralize(entry.count, "item")}
             </span>
-            <span
-              aria-hidden="true"
-              className="text-muted transition group-hover:translate-x-1 group-hover:text-foreground"
-            >
-              →
-            </span>
+            <ArrowRightIcon
+              className="text-muted transition group-hover:translate-x-1 group-hover:text-foreground motion-reduce:transition-none"
+              size={16}
+            />
           </NextLink>
         </li>
       ))}

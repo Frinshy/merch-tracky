@@ -12,7 +12,7 @@ export function ItemList({ items }: { items: readonly MerchItem[] }) {
     <ul className="divide-y divide-separator border-y border-separator">
       {items.map((item) => (
         <li key={item.id} className="group relative flex items-center gap-4 py-3">
-          <div className="relative size-14 shrink-0 overflow-hidden rounded-md bg-surface-secondary">
+          <div className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-surface-secondary">
             <Image
               fill
               alt=""

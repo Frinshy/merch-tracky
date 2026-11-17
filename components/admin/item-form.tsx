@@ -3,19 +3,21 @@
 import {
   Alert,
   Button,
+  Card,
   Checkbox,
   Fieldset,
   Form,
   Label,
   ListBox,
   Select,
+  Surface,
   toast,
 } from "@heroui/react";
-import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { ButtonLink } from "@/components/ui/button-link";
+import { PageHeader } from "@/components/ui/page-header";
 import { saveItem } from "@/lib/admin/client";
 import { sortTypes, TYPE_ORDER } from "@/lib/catalog/data";
 import { RELEASE_DATE_PATTERN, slugify, today } from "@/lib/catalog/format";
@@ -178,12 +180,10 @@ export function ItemForm({
         void submit();
       }}
     >
-      <header className="flex flex-col gap-2">
-        <NextLink className="label-caps text-muted hover:text-foreground" href="/dev">
-          ← Admin
-        </NextLink>
-        <h1 className="font-display text-5xl">{isEdit ? `Edit “${initial.name}”` : "Add item"}</h1>
-      </header>
+      <PageHeader
+        back={{ href: "/dev", label: "Admin" }}
+        title={isEdit ? `Edit “${initial.name}”` : "Add item"}
+      />
 
       {error && (
         <Alert status="danger">
@@ -330,23 +330,25 @@ export function ItemForm({
         />
       </Section>
 
-      <div className="sticky bottom-4 z-10 flex items-center justify-end gap-3 rounded-xl border border-separator bg-background/90 p-3 backdrop-blur">
+      <Surface className="sticky bottom-4 z-10 flex items-center justify-end gap-2 rounded-2xl p-3 shadow-lg">
         <ButtonLink href="/dev" variant="ghost">
           Cancel
         </ButtonLink>
         <Button isDisabled={idTaken} isPending={isSaving} type="submit">
           {isEdit ? "Save changes" : "Add item"}
         </Button>
-      </div>
+      </Surface>
     </Form>
   );
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <Fieldset className="flex w-full flex-col gap-4 rounded-xl border border-separator p-5">
-      <Fieldset.Legend className="px-1 font-display text-2xl">{title}</Fieldset.Legend>
-      {children}
-    </Fieldset>
+    <Card className="w-full p-5" variant="secondary">
+      <Fieldset className="flex w-full flex-col gap-4">
+        <Fieldset.Legend className="mb-1 font-display text-2xl">{title}</Fieldset.Legend>
+        {children}
+      </Fieldset>
+    </Card>
   );
 }

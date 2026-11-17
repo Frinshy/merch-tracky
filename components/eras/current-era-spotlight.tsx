@@ -1,59 +1,46 @@
-import Image from "next/image";
+import NextLink from "next/link";
 
-import { ItemGrid } from "@/components/items/item-grid";
-import { ButtonLink } from "@/components/ui/button-link";
-import { itemsInEra, newestFirst } from "@/lib/catalog/data";
+import { eraStats } from "@/lib/catalog/data";
+import { pluralize } from "@/lib/catalog/format";
 import type { Era } from "@/lib/catalog/types";
 
+import { EraArtwork, eraGradient } from "./era-artwork";
 import { EraDot } from "./era-badge";
+import { EraButtonLink } from "./era-button-link";
 
-/** Homepage band featuring the latest era and its newest items. */
-export function CurrentEraSpotlight({ era, limit = 5 }: { era: Era; limit?: number }) {
-  const eraItems = newestFirst(itemsInEra(era.slug));
-
-  if (!eraItems.length) return null;
+/** Home page feature card for the latest era: artwork, name and a link to it. */
+export function CurrentEraSpotlight({ era }: { era: Era }) {
+  const { count, photos } = eraStats(era.slug);
+  const href = `/eras/${era.slug}`;
 
   return (
-    <section
-      aria-labelledby="current-era-heading"
-      className="-mx-4 flex flex-col gap-8 px-4 py-10 sm:-mx-6 sm:rounded-xl sm:px-8"
-      style={{
-        background: `linear-gradient(160deg, color-mix(in oklab, ${era.color} 28%, transparent), transparent 70%)`,
-      }}
-    >
+    <section aria-labelledby="current-era-heading" className="flex flex-col gap-4">
+      <NextLink
+        aria-label={`Explore ${era.name}`}
+        className="group relative block aspect-[4/3] overflow-hidden rounded-xl ring-1 ring-separator"
+        href={href}
+        style={{ background: eraGradient(era.color) }}
+      >
+        <EraArtwork preload era={era} photos={photos} sizes="(min-width: 1024px) 40vw, 90vw" />
+      </NextLink>
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="flex items-end gap-6">
-          {era.cover && (
-            <div className="relative hidden size-32 shrink-0 overflow-hidden rounded-lg shadow-xl ring-1 ring-separator sm:block">
-              <Image
-                fill
-                alt={`${era.name} cover`}
-                className="object-cover"
-                sizes="8rem"
-                src={era.cover}
-              />
-            </div>
-          )}
-          <div className="flex flex-col gap-2">
-            <p className="label-caps flex items-center gap-2 text-muted">
-              <EraDot color={era.color} />
-              Current era · {era.year}
-            </p>
-            <h2 className="font-display text-5xl leading-none sm:text-6xl" id="current-era-heading">
+        <div className="flex flex-col gap-1">
+          <p className="label-caps flex items-center gap-2 text-muted">
+            <EraDot color={era.color} />
+            Current era · {era.year}
+          </p>
+          <h2 className="font-display text-4xl leading-none" id="current-era-heading">
+            <NextLink className="hover:underline" href={href}>
               {era.name}
-            </h2>
-            {era.description && <p className="max-w-lg text-muted">{era.description}</p>}
-          </div>
+            </NextLink>
+          </h2>
         </div>
-        <ButtonLink
-          className="text-black"
-          href={`/eras/${era.slug}`}
-          style={{ backgroundColor: era.color }}
-        >
-          All {eraItems.length} items <span aria-hidden="true">→</span>
-        </ButtonLink>
+        {count > 0 && (
+          <EraButtonLink color={era.color} href={href}>
+            {pluralize(count, "item")}
+          </EraButtonLink>
+        )}
       </div>
-      <ItemGrid items={eraItems.slice(0, limit)} showEra={false} />
     </section>
   );
 }

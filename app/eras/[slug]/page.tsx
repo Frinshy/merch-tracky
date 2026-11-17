@@ -1,14 +1,18 @@
-import { Breadcrumbs } from "@heroui/react";
+import { linkVariants } from "@heroui/styles";
+import clsx from "clsx";
 import type { Metadata } from "next";
-import Image from "next/image";
+import NextLink from "next/link";
 import { notFound } from "next/navigation";
 
-import { eraGradient } from "@/components/eras/era-artwork";
+import { EraArtwork, eraGradient } from "@/components/eras/era-artwork";
 import { ItemGrid } from "@/components/items/item-grid";
+import { ButtonLink } from "@/components/ui/button-link";
+import { EmptyMessage } from "@/components/ui/empty-message";
+import { ArrowLeftIcon } from "@/components/ui/icons";
 import { PrevNextNav } from "@/components/ui/prev-next-nav";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Stat } from "@/components/ui/stat";
-import { eras, getEra, itemsInEra, neighbours, sortTypes } from "@/lib/catalog/data";
+import { eraStats, eras, getEra, itemsInEra, neighbours, sortTypes } from "@/lib/catalog/data";
 import { pluralize } from "@/lib/catalog/format";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -40,6 +44,7 @@ export default async function EraPage({ params }: Props) {
   const eraItems = itemsInEra(era.slug).sort((a, b) =>
     (a.releaseDate ?? a.addedAt).localeCompare(b.releaseDate ?? b.addedAt),
   );
+  const { photos } = eraStats(era.slug);
   const types = sortTypes(eraItems.map((item) => item.type));
   const { prev, next } = neighbours(
     eras,
@@ -53,10 +58,16 @@ export default async function EraPage({ params }: Props) {
         style={{ background: eraGradient(era.color, 135, 55) }}
       >
         <div>
-          <Breadcrumbs className="label-caps text-black/60">
-            <Breadcrumbs.Item href="/eras">Eras</Breadcrumbs.Item>
-            <Breadcrumbs.Item>{era.year}</Breadcrumbs.Item>
-          </Breadcrumbs>
+          <NextLink
+            className={clsx(
+              linkVariants().base(),
+              "gap-1.5 font-normal text-black/70 hover:text-black",
+            )}
+            href="/eras"
+          >
+            <ArrowLeftIcon size={14} />
+            All eras
+          </NextLink>
           <h1 className="mt-6 font-display text-6xl leading-none sm:text-8xl">{era.name}</h1>
           {era.description && <p className="mt-4 max-w-xl text-black/75">{era.description}</p>}
           <dl className="mt-8 flex gap-8">
@@ -65,21 +76,24 @@ export default async function EraPage({ params }: Props) {
             <Stat label="Year" value={era.year} />
           </dl>
         </div>
-        {era.cover && (
-          <div className="relative aspect-square w-full max-w-xs overflow-hidden rounded-lg shadow-2xl ring-1 ring-black/20 md:w-72">
-            <Image
-              fill
-              preload
-              alt={`${era.name} cover`}
-              className="object-cover"
-              sizes="(min-width: 768px) 18rem, 100vw"
-              src={era.cover}
-            />
+        {(era.cover || photos.length > 0) && (
+          <div className="relative aspect-square w-full max-w-xs overflow-hidden rounded-xl bg-black/10 shadow-2xl ring-1 ring-black/20 md:w-72">
+            <EraArtwork preload era={era} photos={photos} sizes="(min-width: 768px) 18rem, 100vw" />
           </div>
         )}
       </header>
 
-      {types.length === 0 && <p className="text-muted">Nothing archived from this era yet.</p>}
+      {types.length === 0 && (
+        <EmptyMessage
+          action={
+            <ButtonLink href="/items" variant="secondary">
+              Browse the catalog
+            </ButtonLink>
+          }
+          description="Items from this era will show up here once they're added."
+          title="Nothing archived yet"
+        />
+      )}
 
       {types.map((type) => {
         const ofType = eraItems.filter((item) => item.type === type);

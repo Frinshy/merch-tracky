@@ -5,6 +5,7 @@ import { useMemo } from "react";
 
 import { ItemGrid } from "@/components/items/item-grid";
 import { ItemList } from "@/components/items/item-list";
+import { EmptyMessage } from "@/components/ui/empty-message";
 import { items } from "@/lib/catalog/data";
 import { applyFilters, hasActiveFilters } from "@/lib/catalog/filters";
 
@@ -32,13 +33,15 @@ export function Catalog() {
       </div>
 
       {results.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 py-24 text-center">
-          <p className="font-display text-3xl">Nothing found</p>
-          <p className="text-muted">Try a different search or remove some filters.</p>
-          <Button className="mt-2" variant="secondary" onPress={clear}>
-            Clear filters
-          </Button>
-        </div>
+        <EmptyMessage
+          action={
+            <Button variant="secondary" onPress={clear}>
+              Clear filters
+            </Button>
+          }
+          description="Try a different search or remove some filters."
+          title="Nothing found"
+        />
       ) : filters.view === "list" ? (
         <ItemList items={results} />
       ) : (

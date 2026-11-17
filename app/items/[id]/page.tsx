@@ -5,14 +5,14 @@ import { notFound } from "next/navigation";
 
 import { ItemDetails } from "@/components/items/item-details";
 import { ItemGallery } from "@/components/items/item-gallery";
-import { ItemGrid } from "@/components/items/item-grid";
+import { ItemRail } from "@/components/items/item-rail";
 import { PrevNextNav } from "@/components/ui/prev-next-nav";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { coverOf, getEra, getItem, items, itemsInEra, neighbours } from "@/lib/catalog/data";
 
 type Props = { params: Promise<{ id: string }> };
 
-const RELATED_COUNT = 5;
+const RELATED_COUNT = 10;
 
 export const dynamicParams = false;
 
@@ -49,7 +49,7 @@ export default async function ItemPage({ params }: Props) {
   return (
     <div className="flex flex-col gap-20 pt-8">
       <div className="flex flex-col gap-6">
-        <Breadcrumbs className="label-caps">
+        <Breadcrumbs>
           <Breadcrumbs.Item href="/items">Catalog</Breadcrumbs.Item>
           {era && <Breadcrumbs.Item href={`/eras/${era.slug}`}>{era.name}</Breadcrumbs.Item>}
           <Breadcrumbs.Item>{item.name}</Breadcrumbs.Item>
@@ -103,7 +103,7 @@ export default async function ItemPage({ params }: Props) {
             eyebrow="Same era"
             title={`More from ${era.name}`}
           />
-          <ItemGrid items={related} showEra={false} />
+          <ItemRail items={related} label={`More from ${era.name}`} showEra={false} />
         </section>
       )}
     </div>

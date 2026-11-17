@@ -1,30 +1,36 @@
-import NextLink from "next/link";
+import { TextLink } from "./text-link";
 
-/** Small uppercase eyebrow, display-font title and an optional link. */
+/** Small uppercase eyebrow, display-font title and an optional link or controls. */
 export function SectionHeading({
   eyebrow,
   title,
+  description,
   action,
-  as: Heading = "h2",
+  children,
 }: {
   eyebrow?: React.ReactNode;
   title: React.ReactNode;
+  description?: React.ReactNode;
   action?: { href: string; label: string };
-  as?: "h1" | "h2";
+  /** Controls shown on the right instead of (or next to) the link. */
+  children?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-end justify-between gap-4 border-b border-separator pb-4">
-      <div>
+    <div className="flex flex-wrap items-end justify-between gap-4 border-b border-separator pb-4">
+      <div className="flex flex-col gap-1">
         {eyebrow && <p className="label-caps text-muted">{eyebrow}</p>}
-        <Heading className="mt-1 font-display text-3xl sm:text-4xl">{title}</Heading>
+        <h2 className="font-display text-3xl sm:text-4xl">{title}</h2>
+        {description && <p className="text-sm text-muted">{description}</p>}
       </div>
-      {action && (
-        <NextLink
-          className="shrink-0 text-sm text-muted transition-colors hover:text-foreground"
-          href={action.href}
-        >
-          {action.label} <span aria-hidden="true">→</span>
-        </NextLink>
+      {(action || children) && (
+        <div className="flex shrink-0 items-center gap-3">
+          {children}
+          {action && (
+            <TextLink arrow="forward" className="text-sm" href={action.href}>
+              {action.label}
+            </TextLink>
+          )}
+        </div>
       )}
     </div>
   );

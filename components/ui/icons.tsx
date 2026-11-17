@@ -66,6 +66,24 @@ export const ArrowDownIcon = (props: IconProps) => (
   </Svg>
 );
 
+export const ArrowLeftIcon = (props: IconProps) => (
+  <Svg {...props}>
+    <path d="M19 12H5M12 19l-7-7 7-7" />
+  </Svg>
+);
+
+export const ArrowRightIcon = (props: IconProps) => (
+  <Svg {...props}>
+    <path d="M5 12h14M12 5l7 7-7 7" />
+  </Svg>
+);
+
+export const PlusIcon = (props: IconProps) => (
+  <Svg {...props}>
+    <path d="M12 5v14M5 12h14" />
+  </Svg>
+);
+
 export const GridIcon = (props: IconProps) => (
   <Svg {...props}>
     <rect height="7" rx="1" width="7" x="3" y="3" />

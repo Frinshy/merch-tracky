@@ -5,6 +5,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import { useState } from "react";
 
+import { ArrowLeftIcon, ArrowRightIcon } from "@/components/ui/icons";
 import { PLACEHOLDER_IMAGE } from "@/lib/catalog/data";
 import type { MerchImage } from "@/lib/catalog/types";
 
@@ -19,7 +20,6 @@ export function ItemGallery({ images, name }: { images: MerchImage[]; name: stri
   return (
     <section aria-label="Item photos" className="flex min-w-0 flex-col gap-3">
       {/* Arrow keys switch photos while the main image is focused. */}
-      {}
       <div
         aria-roledescription={hasMany ? "carousel" : undefined}
         className="group relative aspect-square overflow-hidden rounded-xl bg-surface-secondary ring-1 ring-separator focus-visible:outline-2 focus-visible:outline-focus"
@@ -58,7 +58,7 @@ export function ItemGallery({ images, name }: { images: MerchImage[]; name: stri
               aria-current={active === index}
               aria-label={`Show photo ${index + 1}`}
               className={clsx(
-                "relative size-16 shrink-0 overflow-hidden rounded-md bg-surface-secondary ring-1 transition sm:size-20",
+                "relative size-16 shrink-0 overflow-hidden rounded-lg bg-surface-secondary ring-1 transition sm:size-20",
                 active === index
                   ? "ring-2 ring-foreground"
                   : "opacity-60 ring-separator hover:opacity-100",
@@ -93,7 +93,7 @@ function GalleryArrow({
       variant="tertiary"
       onPress={onPress}
     >
-      <span aria-hidden="true">{direction === "previous" ? "←" : "→"}</span>
+      {direction === "previous" ? <ArrowLeftIcon size={18} /> : <ArrowRightIcon size={18} />}
     </Button>
   );
 }
