@@ -60,15 +60,15 @@ export default async function ItemPage({ params }: Props) {
         </TextLink>
 
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
-          <div className="relative min-w-0">
+          <div className="min-w-0">
             <ItemGallery images={item.images} name={item.name} />
-            {item.limited && (
-              <LimitedSticker className="absolute -right-3 -top-3 size-20 text-sm" />
-            )}
           </div>
 
           <div className="flex min-w-0 flex-col gap-8 lg:sticky lg:top-24 lg:self-start">
             <div className="flex flex-col gap-4">
+              {item.limited && (
+                <LimitedSticker className="self-start">Limited release</LimitedSticker>
+              )}
               <h1 className="type-display text-balance text-6xl leading-[0.85] sm:text-7xl">
                 {item.name}
               </h1>

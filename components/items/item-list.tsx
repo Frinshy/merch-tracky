@@ -6,6 +6,8 @@ import { coverOf } from "@/lib/catalog/data";
 import { formatDate } from "@/lib/catalog/format";
 import type { MerchItem } from "@/lib/catalog/types";
 
+import { LimitedSticker } from "./limited-sticker";
+
 /** Compact one-row-per-item view, handy for checking items off. */
 export function ItemList({ items }: { items: readonly MerchItem[] }) {
   return (
@@ -29,6 +31,7 @@ export function ItemList({ items }: { items: readonly MerchItem[] }) {
               {item.name}
             </NextLink>
             {item.edition && <span className="ml-2 text-sm text-muted">{item.edition}</span>}
+            {item.limited && <LimitedSticker className="ml-2 align-middle" />}
           </div>
           <span className="hidden w-28 text-sm text-muted md:block">{item.type}</span>
           <EraBadge

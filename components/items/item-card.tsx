@@ -32,7 +32,7 @@ export function ItemCard({
           sizes="(min-width: 1280px) 20vw, (min-width: 768px) 30vw, 50vw"
           src={cover.src}
         />
-        {item.limited && <LimitedSticker className="absolute -right-2 -top-2" />}
+        {item.limited && <LimitedSticker className="absolute left-2 top-2" />}
       </Card>
       <div className="mt-3 flex flex-col gap-1.5">
         <h3 className="font-semibold leading-snug">
