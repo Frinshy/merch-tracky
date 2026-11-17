@@ -1,108 +1,36 @@
-# Merch Tracky
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="public/icon.svg">
+    <img src="docs/logo-dark.svg" alt="Merch Tracky logo" width="80">
+  </picture>
+</p>
 
-An unofficial public archive of Louis Tomlinson merchandise, browsable by era, format and release.
+<h1 align="center">Merch Tracky</h1>
+
+<p align="center">An unofficial public archive of Louis Tomlinson merchandise, browsable by era, format and release.</p>
+
+![Home](docs/screenshots/home.png)
 
 ## Features
 
-- **Home** shows recently added items, a spotlight on the current era and a quick index by era and format.
-- **Eras** (`/eras`) is a timeline of every era. Each era page (`/eras/<slug>`) groups its items by format and uses the era's colour.
-- **Catalog** (`/items`) with instant search, multi-select era/format/source filters, sorting and a grid or list view. Filters are kept in the URL, so filtered views can be shared.
-- **Item pages** with a photo gallery (with photo credits), release details, previous/next navigation and more items from the same era.
+- **Eras**: a timeline of every album cycle. Each era page groups its merch by format and uses the era's colour.
+- **Catalog**: instant search, era and format filters, sorting, and grid or list views. Filtered views can be shared by URL.
+- **Item pages**: photo gallery with credits, release details, and related items from the same era.
 - Light and dark themes.
-- Fully static. Every public page is pre-rendered at build time.
+- Fully static. Every page is pre-rendered at build time.
 
 ## Screenshots
 
-> Screenshots in `docs/` show the previous design and need to be retaken.
+| Eras                                 | Era                                |
+| ------------------------------------ | ---------------------------------- |
+| ![Eras](docs/screenshots/eras.png)   | ![Era](docs/screenshots/era.png)   |
+| **Catalog**                          | **Item**                           |
+| ![Catalog](docs/screenshots/catalog.png) | ![Item](docs/screenshots/item.png) |
 
-## Managing the archive
+## Built with
 
-Only the repository owner can add content. The public site is read-only, and content changes ship through git.
-
-1. Run `pnpm dev` and open [`/dev`](http://localhost:3000/dev). You can also use the floating **Dev** toolbar.
-2. Add, edit or delete items and eras. Photos are resized to max 2000px, converted to WebP and saved to `public/items/`.
-3. Commit `data/` and `public/items/`, then push. The deployment rebuilds with the new content.
-
-The admin is excluded from production builds entirely (see `next.config.mjs`):
-
-- Admin routes use the `.dev.tsx` / `.dev.ts` extension (`app/dev/**/page.dev.tsx`,
-  `app/api/dev/**/route.dev.ts`). These extensions are only registered under `next dev`, so
-  `pnpm build` never compiles them, and `components/admin` / `lib/admin` aren't bundled.
-  In production, `/dev` and `/api/dev/*` simply don't exist (404).
-- The floating dev toolbar is aliased to an empty stub (`dev-toolbar.stub.tsx`) in builds.
-
-Adding a new admin route? Give it the `.dev.tsx` / `.dev.ts` extension.
-
-## Development
-
-```bash
-pnpm dev         # start the dev server (includes the /dev admin)
-pnpm check       # type-check + lint
-pnpm lint:fix    # auto-fix lint and formatting (Prettier runs through ESLint)
-pnpm build       # production build
-```
-
-Built with Next.js 16 (App Router), [HeroUI v3](https://heroui.com) and Tailwind CSS v4.
-The HeroUI MCP server is configured in `opencode.json` for AI-assisted work on the UI.
-
-### Project structure
-
-```
-app/                    Routes only: pages, layouts, metadata, sitemap/robots
-  api/dev/              Admin API (thin handlers around lib/admin), dev-only
-  dev/                  Admin pages, dev-only (*.dev.tsx)
-components/
-  layout/               Navbar, footer, theme switch, dev toolbar
-  ui/                   Small shared building blocks (ButtonLink, SectionHeading, icons…)
-  items/ eras/          Domain components for the public site
-  catalog/              Catalog page: toolbar + URL-synced filter hook
-  admin/                Admin forms, table and dialogs
-lib/
-  catalog/              Types, read-only data access, formatting, pure filter/sort logic
-  admin/                Server-side admin: guard, file store, image processing,
-                        validation, services; plus a typed browser API client
-config/                 Site config and fonts
-data/                   The archive itself (JSON)
-```
-
-Conventions:
-
-- Server Components by default. `"use client"` only where there is interaction.
-- UI uses HeroUI components. Next.js links styled as buttons use `ButtonLink` (`buttonVariants`).
-- Business logic lives in `lib/`, not in components or route handlers.
-- Anything that writes to disk imports `server-only` and is guarded by `isAdminEnabled()`.
-
-### Data files
-
-`data/eras.json`:
-
-```json
-{ "slug": "walls", "name": "Walls", "year": 2020, "color": "#7d93b2", "description": "…", "cover": "/items/optional.webp" }
-```
-
-`data/merch-items.json` → `items[]`:
-
-```json
-{
-  "id": "unique-item-id",
-  "name": "Item name",
-  "description": "Short description",
-  "type": "Vinyl",
-  "era": "walls",
-  "addedAt": "2026-05-01",
-  "releaseDate": "2020-01",
-  "edition": "Signed",
-  "source": "Official webstore",
-  "region": "UK",
-  "price": "£25",
-  "limited": true,
-  "tags": ["signed"],
-  "images": [{ "src": "/items/item.webp", "alt": "Front cover", "author": "Photo credit" }]
-}
-```
-
-Only `id`, `name`, `type`, `era`, `addedAt` and `images` are required. `era` must match a slug in `eras.json`. `releaseDate` accepts `YYYY`, `YYYY-MM` or `YYYY-MM-DD`.
+[Next.js](https://nextjs.org), [HeroUI](https://heroui.com) and [Tailwind CSS](https://tailwindcss.com).
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+[MIT](LICENSE)
