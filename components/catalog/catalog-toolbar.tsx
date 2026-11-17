@@ -10,7 +10,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@heroui/react";
-import { LayoutGridIcon, ListIcon } from "lucide-react";
+import { CheckIcon, LayoutGridIcon, ListIcon } from "lucide-react";
 
 import { EraDot } from "@/components/eras/era-badge";
 import { allSources, allTypes, eras } from "@/lib/catalog/data";
@@ -95,41 +95,39 @@ export function CatalogToolbar({
 
       <div className="scrollbar-none -mx-4 flex items-center gap-3 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:px-0">
         <FilterGroup
+          allLabel="All eras"
           label="Era"
           selected={filters.eras}
           onChange={(selected) => onChange({ eras: selected })}
         >
           {eras.map((era) => (
-            <Tag key={era.slug} id={era.slug} textValue={era.name}>
-              <EraDot color={era.color} />
-              {era.name}
-            </Tag>
+            <FilterChip key={era.slug} color={era.color} id={era.slug} label={era.name}>
+              <EraDot className="in-data-[selected=true]:hidden" color={era.color} />
+            </FilterChip>
           ))}
         </FilterGroup>
         <Separator className="h-6 shrink-0" orientation="vertical" />
         <FilterGroup
+          allLabel="All formats"
           label="Format"
           selected={filters.types}
           onChange={(selected) => onChange({ types: selected })}
         >
           {allTypes.map((type) => (
-            <Tag key={type} id={type}>
-              {type}
-            </Tag>
+            <FilterChip key={type} id={type} label={type} />
           ))}
         </FilterGroup>
         {allSources.length > 0 && (
           <>
             <Separator className="h-6 shrink-0" orientation="vertical" />
             <FilterGroup
+              allLabel="All shops"
               label="Sold via"
               selected={filters.sources}
               onChange={(selected) => onChange({ sources: selected })}
             >
               {allSources.map((source) => (
-                <Tag key={source} id={source}>
-                  {source}
-                </Tag>
+                <FilterChip key={source} id={source} label={source} />
               ))}
             </FilterGroup>
           </>
@@ -139,14 +137,48 @@ export function CatalogToolbar({
   );
 }
 
-/** A multi-select row of filter chips. */
+/** Key of the "All" chip that leads every group; it is never stored in the filters. */
+const ALL = "__all";
+
+/** Filter chip with a clear on/off state: check icon, coloured ring and tint when selected. */
+function FilterChip({
+  id,
+  label,
+  color,
+  children,
+}: {
+  id: string;
+  label: string;
+  color?: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <Tag
+      className="ring-(--chip) data-[selected=true]:bg-[color-mix(in_oklab,var(--chip)_22%,transparent)] data-[selected=true]:text-foreground data-[selected=true]:ring-2 data-[selected=true]:ring-inset"
+      id={id}
+      style={{ "--chip": color ?? "var(--color-accent)" } as React.CSSProperties}
+      textValue={label}
+    >
+      <CheckIcon className="hidden in-data-[selected=true]:block" strokeWidth={3} />
+      {children}
+      {label}
+    </Tag>
+  );
+}
+
+/**
+ * A multi-select row of filter chips, led by an "All" chip. "All" is on while nothing in the
+ * group is picked; pressing it clears the group.
+ */
 function FilterGroup({
   label,
+  allLabel,
   selected,
   onChange,
   children,
 }: {
   label: string;
+  allLabel: string;
   selected: string[];
   onChange: (selected: string[]) => void;
   children: React.ReactNode;
@@ -154,12 +186,20 @@ function FilterGroup({
   return (
     <TagGroup
       className="shrink-0"
-      selectedKeys={selected}
+      selectedKeys={selected.length ? selected : [ALL]}
       selectionMode="multiple"
-      onSelectionChange={(keys) => onChange(toStrings(keys))}
+      onSelectionChange={(keys) => {
+        const next = toStrings(keys);
+
+        // "All" was just switched on: drop the group's picks. Otherwise "All" is only along for the ride.
+        onChange(next.includes(ALL) && selected.length ? [] : next.filter((key) => key !== ALL));
+      }}
     >
       <Label className="sr-only">{label}</Label>
-      <TagGroup.List className="flex-nowrap sm:flex-wrap">{children}</TagGroup.List>
+      <TagGroup.List className="flex-nowrap sm:flex-wrap">
+        <FilterChip id={ALL} label={allLabel} />
+        {children}
+      </TagGroup.List>
     </TagGroup>
   );
 }

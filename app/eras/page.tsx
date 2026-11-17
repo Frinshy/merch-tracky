@@ -23,27 +23,6 @@ export default function ErasPage() {
         title="Eras"
       />
 
-      <nav
-        aria-label="Jump to era"
-        className="scrollbar-none -mx-4 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0"
-      >
-        {timeline.map((era) => (
-          <a
-            key={era.slug}
-            className={buttonVariants({
-              size: "sm",
-              variant: "tertiary",
-              className: "shrink-0",
-            })}
-            href={`#${era.slug}`}
-          >
-            <EraDot color={era.color} />
-            {era.name}
-            <span className="label-caps text-muted">{era.year}</span>
-          </a>
-        ))}
-      </nav>
-
       <ol>
         {timeline.map((era) => (
           <EraTimelineItem key={era.slug} era={era} isCurrent={era.slug === currentEra?.slug} />
