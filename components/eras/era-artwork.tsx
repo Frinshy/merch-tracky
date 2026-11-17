@@ -69,7 +69,7 @@ export function EraArtwork({
   }
 
   return (
-    <span className="type-display absolute inset-0 grid place-items-center text-3xl text-black/50">
+    <span className="type-display absolute inset-0 grid place-items-center p-4 text-center text-2xl text-black/50 sm:text-3xl">
       Nothing archived yet
     </span>
   );

@@ -22,7 +22,7 @@ export function Navbar() {
 
   return (
     <nav className="fixed top-0 z-40 w-full border-b border-separator bg-background/80 backdrop-blur-lg">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6">
         <div className="flex items-center gap-8">
           <NextLink
             aria-label={`${ARTIST} merch archive, home`}
@@ -31,7 +31,9 @@ export function Navbar() {
           >
             <Logo />
             <span className="flex flex-col">
-              <span className="type-display text-2xl leading-none">{ARTIST}</span>
+              <span className="type-display whitespace-nowrap text-xl leading-none min-[360px]:text-2xl">
+                {ARTIST}
+              </span>
               <span className="label-caps text-[0.625rem] leading-none text-muted">
                 Merch archive
               </span>

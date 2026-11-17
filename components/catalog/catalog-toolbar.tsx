@@ -39,7 +39,7 @@ export function CatalogToolbar({
           fullWidth
           aria-label="Search the catalog"
           autoFocus={autoFocus}
-          className="flex-1"
+          className="min-w-0 flex-1"
           value={filters.query}
           onChange={(query) => onChange({ query })}
         >
@@ -52,12 +52,12 @@ export function CatalogToolbar({
 
         <Select
           aria-label="Sort by"
-          className="w-44 shrink-0"
+          className="w-36 shrink-0 sm:w-44"
           value={filters.sort}
           onChange={(key) => key && onChange({ sort: key as SortKey })}
         >
           <Select.Trigger>
-            <Select.Value />
+            <Select.Value className="truncate" />
             <Select.Indicator />
           </Select.Trigger>
           <Select.Popover>
