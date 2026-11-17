@@ -1,5 +1,6 @@
 import { linkVariants } from "@heroui/styles";
 import clsx from "clsx";
+import { ArrowLeftIcon } from "lucide-react";
 import type { Metadata } from "next";
 import NextLink from "next/link";
 import { notFound } from "next/navigation";
@@ -8,7 +9,6 @@ import { EraArtwork, eraGradient } from "@/components/eras/era-artwork";
 import { ItemGrid } from "@/components/items/item-grid";
 import { ButtonLink } from "@/components/ui/button-link";
 import { EmptyMessage } from "@/components/ui/empty-message";
-import { ArrowLeftIcon } from "@/components/ui/icons";
 import { PrevNextNav } from "@/components/ui/prev-next-nav";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Stat } from "@/components/ui/stat";

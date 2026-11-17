@@ -1,8 +1,7 @@
 import { linkVariants } from "@heroui/styles";
 import clsx from "clsx";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import NextLink from "next/link";
-
-import { ArrowLeftIcon, ArrowRightIcon } from "./icons";
 
 type Target = { href: string; label: string };
 

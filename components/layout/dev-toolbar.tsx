@@ -1,10 +1,10 @@
 "use client";
 
 import { Surface } from "@heroui/react";
+import { PlusIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { ButtonLink } from "@/components/ui/button-link";
-import { PlusIcon } from "@/components/ui/icons";
 
 /** Floating shortcut to the admin tools. Only mounted by the root layout under `next dev`. */
 export function DevToolbar() {

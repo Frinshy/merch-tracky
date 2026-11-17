@@ -2,10 +2,10 @@
 
 import { Button } from "@heroui/react";
 import clsx from "clsx";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
-import { ArrowLeftIcon, ArrowRightIcon } from "@/components/ui/icons";
 import { PLACEHOLDER_IMAGE } from "@/lib/catalog/data";
 import type { MerchImage } from "@/lib/catalog/types";
 

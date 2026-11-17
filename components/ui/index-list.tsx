@@ -1,8 +1,7 @@
+import { ArrowRightIcon } from "lucide-react";
 import NextLink from "next/link";
 
 import { pluralize } from "@/lib/catalog/format";
-
-import { ArrowRightIcon } from "./icons";
 
 export type IndexEntry = {
   href: string;

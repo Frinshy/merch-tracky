@@ -2,12 +2,13 @@
 
 import { Button } from "@heroui/react";
 import clsx from "clsx";
+import { MenuIcon, SearchIcon, XIcon } from "lucide-react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { ButtonLink } from "@/components/ui/button-link";
-import { CloseIcon, GithubIcon, Logo, MenuIcon, SearchIcon } from "@/components/ui/icons";
+import { GithubIcon, Logo } from "@/components/ui/icons";
 import { siteConfig } from "@/config/site";
 
 import { ThemeSwitch } from "./theme-switch";
@@ -69,7 +70,7 @@ export function Navbar() {
             variant="ghost"
             onPress={() => setMenuPath(isMenuOpen ? null : pathname)}
           >
-            {isMenuOpen ? <CloseIcon size={18} /> : <MenuIcon size={18} />}
+            {isMenuOpen ? <XIcon size={18} /> : <MenuIcon size={18} />}
           </Button>
         </div>
       </div>

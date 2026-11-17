@@ -1,8 +1,8 @@
 import clsx from "clsx";
+import { ArrowRightIcon } from "lucide-react";
 import type { ComponentProps } from "react";
 
 import { ButtonLink } from "@/components/ui/button-link";
-import { ArrowRightIcon } from "@/components/ui/icons";
 
 /** Primary call-to-action filled with an era's colour. */
 export function EraButtonLink({

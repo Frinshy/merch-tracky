@@ -1,5 +1,6 @@
+import { PlusIcon } from "lucide-react";
+
 import { ButtonLink } from "@/components/ui/button-link";
-import { PlusIcon } from "@/components/ui/icons";
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionHeading } from "@/components/ui/section-heading";
 import type { Era, MerchItem } from "@/lib/catalog/types";

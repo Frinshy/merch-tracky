@@ -1,5 +1,3 @@
-"use client";
-
 import type { Key, Selection } from "@heroui/react";
 import {
   Label,
@@ -12,9 +10,9 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@heroui/react";
+import { LayoutGridIcon, ListIcon } from "lucide-react";
 
 import { EraDot } from "@/components/eras/era-badge";
-import { GridIcon, ListIcon } from "@/components/ui/icons";
 import { allSources, allTypes, eras } from "@/lib/catalog/data";
 import {
   SORT_OPTIONS,
@@ -87,10 +85,9 @@ export function CatalogToolbar({
           }}
         >
           <ToggleButton isIconOnly aria-label="Grid view" id="grid">
-            <GridIcon size={16} />
+            <LayoutGridIcon size={16} />
           </ToggleButton>
           <ToggleButton isIconOnly aria-label="List view" id="list">
-            <ToggleButtonGroup.Separator />
             <ListIcon size={16} />
           </ToggleButton>
         </ToggleButtonGroup>

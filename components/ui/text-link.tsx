@@ -1,9 +1,8 @@
 import { linkVariants } from "@heroui/styles";
 import clsx from "clsx";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import NextLink from "next/link";
 import type { ComponentProps } from "react";
-
-import { ArrowLeftIcon, ArrowRightIcon } from "./icons";
 
 type TextLinkProps = ComponentProps<typeof NextLink> & {
   /** Adds a trailing (forward) or leading (back) arrow. */

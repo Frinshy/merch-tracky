@@ -2,9 +2,8 @@
 
 import { Button, Card, Chip, Input } from "@heroui/react";
 import clsx from "clsx";
+import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 import { useRef, useState } from "react";
-
-import { ArrowDownIcon, ArrowUpIcon } from "@/components/ui/icons";
 
 import { previewOf, releasePreviews, rowsFromFiles, type ImageRow } from "./image-rows";
 
