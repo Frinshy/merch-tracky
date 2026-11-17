@@ -45,7 +45,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Navbar />
             <main className="mx-auto w-full max-w-7xl grow px-4 pt-16 sm:px-6">{children}</main>
             <Footer />
-            <DevToolbar />
+            {/* Statically false in production builds, so the toolbar is dropped from the bundle. */}
+            {process.env.NODE_ENV === "development" && <DevToolbar />}
           </div>
         </Providers>
       </body>

@@ -4,13 +4,11 @@ import { usePathname } from "next/navigation";
 
 import { ButtonLink } from "@/components/ui/button-link";
 
-/** Floating shortcut to the admin tools. Only rendered by `next dev`. */
+/** Floating shortcut to the admin tools. Only mounted by the root layout under `next dev`. */
 export function DevToolbar() {
   const pathname = usePathname();
 
-  if (process.env.NODE_ENV !== "development" || pathname.startsWith("/dev")) {
-    return null;
-  }
+  if (pathname.startsWith("/dev")) return null;
 
   const itemId = pathname.match(/^\/items\/([^/]+)$/)?.[1];
 
